@@ -99,7 +99,15 @@ async function handleCheckoutSessionSuccess(session, env) {
   // Action
   if (opportunityId) {
     console.log(`[Stripe Webhook] Match found via ${matchMethod}. Updating Opportunity ${opportunityId} to Won/Paid.`);
-    await markOpportunityPaid(opportunityId, env);
+    const invoiceId = typeof session.invoice === 'string' ? session.invoice : session.invoice?.id;
+    const invoiceUrl = session.invoice?.hosted_invoice_url;
+    const paymentIntentId = typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id;
+    await markOpportunityPaid(opportunityId, env, {
+      invoiceId,
+      invoiceUrl,
+      sessionId: session.id,
+      paymentIntentId
+    });
   } else {
     console.warn(`[Stripe Webhook] No matching Opportunity found. Session: ${session.id}`);
   }
@@ -155,7 +163,14 @@ async function handleInvoicePaymentSuccess(invoice, env, stripe) {
 
   if (opportunityId) {
     console.log(`[Stripe Webhook] Match found via ${matchMethod}. Updating Opportunity ${opportunityId} to Won/Paid.`);
-    await markOpportunityPaid(opportunityId, env);
+    const invoiceId = invoice.id;
+    const invoiceUrl = invoice.hosted_invoice_url;
+    const paymentIntentId = typeof invoice.payment_intent === 'string' ? invoice.payment_intent : invoice.payment_intent?.id;
+    await markOpportunityPaid(opportunityId, env, {
+      invoiceId,
+      invoiceUrl,
+      paymentIntentId
+    });
   } else {
     console.warn(`[Stripe Webhook] No matching Opportunity found. Invoice: ${invoice.id}`);
   }

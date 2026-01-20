@@ -145,14 +145,60 @@ export async function findOpenOpportunityForPerson(personId, env) {
 /**
  * Mark Opportunity as Paid
  */
-export async function markOpportunityPaid(opportunityId, env) {
+export async function markOpportunityPaid(opportunityId, env, paymentInfo = {}) {
   const url = `${COPPER_API_URL}/opportunities/${opportunityId}`;
+  const {
+    invoiceId,
+    invoiceUrl,
+    sessionId,
+    paymentIntentId
+  } = paymentInfo as {
+    invoiceId?: string;
+    invoiceUrl?: string;
+    sessionId?: string;
+    paymentIntentId?: string;
+  };
+
+  let existingDetails = '';
+  try {
+    const existingResponse = await fetch(url, {
+      method: 'GET',
+      headers: getCopperHeaders(env)
+    });
+    if (existingResponse.ok) {
+      const existing = await existingResponse.json();
+      existingDetails = existing?.details || '';
+    }
+  } catch (error) {
+    console.warn(`[Copper API] Failed to fetch existing opportunity ${opportunityId}:`, error);
+  }
+
+  const paymentLines: string[] = [];
+  if (invoiceId) paymentLines.push(`Stripe Invoice ID: ${invoiceId}`);
+  if (invoiceUrl) paymentLines.push(`Stripe Invoice URL: ${invoiceUrl}`);
+  if (sessionId) paymentLines.push(`Stripe Session ID: ${sessionId}`);
+  if (paymentIntentId) paymentLines.push(`Stripe Payment Intent: ${paymentIntentId}`);
+
+  const newPaymentLines = paymentLines.filter(line => !existingDetails.includes(line));
+  let updatedDetails = existingDetails;
+  if (newPaymentLines.length) {
+    const paymentBlock = ['Stripe Payment', ...newPaymentLines].join('\n');
+    updatedDetails = existingDetails
+      ? `${existingDetails}\n\n${paymentBlock}`
+      : paymentBlock;
+  }
+
+  const payload: { pipeline_stage_id: number; details?: string } = {
+    pipeline_stage_id: PAID_STAGE_ID
+  };
+  if (updatedDetails && updatedDetails !== existingDetails) {
+    payload.details = updatedDetails;
+  }
+
   const response = await fetch(url, {
     method: 'PUT',
     headers: getCopperHeaders(env),
-    body: JSON.stringify({
-      pipeline_stage_id: PAID_STAGE_ID
-    })
+    body: JSON.stringify(payload)
   });
   
   if (!response.ok) {
@@ -238,7 +284,15 @@ export async function createCopperOpportunity(formData, personId, env) {
   ].join('\n');
 
   // Prepare Copper API request for Opportunity
-  const copperPayload = {
+  const copperPayload: {
+    name: string;
+    pipeline_id: number;
+    pipeline_stage_id: number;
+    primary_contact_id: number;
+    details: string;
+    custom_fields: { custom_field_definition_id: number; value: any }[];
+    assignee_id?: number;
+  } = {
     name: opportunityName,
     pipeline_id: ESTATE_PLANNING_PIPELINE_ID,
     pipeline_stage_id: COMPLETED_QUIZ_STAGE_ID,

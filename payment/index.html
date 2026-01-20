@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Edgewater Insurance Solutions</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="/" aria-label="Back to home">
+                    <img src="/LOGO.jpg" alt="Edgewater Insurance Solutions Logo" style="height: 90px; width: auto; vertical-align: middle;">
+                </a>
+            </div>
+            <a href="/" class="btn btn-primary">Back</a>
+        </div>
+    </header>
+
+    <section class="section-padding packages" id="packages">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2>Choose Your Package</h2>
+                <p style="color: var(--text-light); max-width: 760px; margin: 10px auto 0;">
+                    Select a package below to continue to secure checkout.
+                </p>
+            </div>
+
+            <div class="toggle-container">
+                <div class="toggle-bg">
+                    <div class="toggle-option active" onclick="setCustomerType('responder')">First Responder</div>
+                    <div class="toggle-option" onclick="setCustomerType('civilian')">Civilian</div>
+                </div>
+            </div>
+
+            <div id="paymentError" style="display:none; max-width: 900px; margin: 0 auto 18px; padding: 14px 16px; border: 1px solid rgba(229,62,62,.25); background: rgba(229,62,62,.06); color: #c53030; border-radius: 12px;">
+                Something went wrong starting checkout. Please try again.
+            </div>
+
+            <div class="cards-container">
+                <!-- Will Package -->
+                <div class="package-card">
+                    <h3>Will Package</h3>
+                    <div class="price-container">
+                        <div class="base-price strike" id="base-will"></div>
+                        <div class="package-price" id="price-will">$0</div>
+                    </div>
+                    <p><strong>Until April 30th</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> Last Will &amp; Testament</li>
+                        <li><span class="icon-check">✓</span> Durable Power of Attorney</li>
+                        <li><span class="icon-check">✓</span> Advance Health Care Directive</li>
+                        <li><span class="icon-check">✓</span> HIPAA Authorization</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="startCheckout('will')">Continue</button>
+                </div>
+
+                <!-- Trust (Individual) -->
+                <div class="package-card featured">
+                    <div class="card-badge">Recommended</div>
+                    <h3>Trust (Individual)</h3>
+                    <div class="price-container">
+                        <div class="base-price strike" id="base-trust-ind"></div>
+                        <div class="package-price" id="price-trust-ind">$500</div>
+                    </div>
+                    <p><strong>Avoids Probate Court</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> <strong>Everything in Will</strong></li>
+                        <li class="feature-plus">PLUS:</li>
+                        <li><span class="icon-check">✓</span> Revocable Living Trust</li>
+                        <li><span class="icon-check">✓</span> Transfer Deed for Home (CA)</li>
+                        <li><span class="icon-check">✓</span> Privacy Protection</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="startCheckout('trust-individual')">Secure Checkout</button>
+                </div>
+
+                <!-- Trust (Couples) -->
+                <div class="package-card featured">
+                    <div class="card-badge">Best Value</div>
+                    <h3>Trust (Couples)</h3>
+                    <div class="price-container">
+                        <div class="base-price strike" id="base-trust-couple"></div>
+                        <div class="package-price" id="price-trust-couple">$750</div>
+                    </div>
+                    <p><strong>Complete Family Protection</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> <strong>Joint Couple's Trusts</strong></li>
+                        <li class="feature-plus">PLUS:</li>
+                        <li><span class="icon-check">✓</span> Mirror Wills for Both</li>
+                        <li><span class="icon-check">✓</span> Joint Asset Protection</li>
+                        <li><span class="icon-check">✓</span> Spousal Provisions</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="startCheckout('trust-couple')">Secure Checkout</button>
+                </div>
+
+                <!-- Update Existing Trust -->
+                <div class="package-card">
+                    <h3>Update Existing Trust</h3>
+                    <div class="price-container">
+                        <div class="base-price strike" id="base-trust-update"></div>
+                        <div class="package-price" id="price-trust-update">$350</div>
+                    </div>
+                    <p><strong>With free updates anytime</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> <strong>Everything in Will</strong></li>
+                        <li class="feature-plus">PLUS:</li>
+                        <li><span class="icon-check">✓</span> We will use your existing trust as a starting point to create a new trust</li>
+                        <li><span class="icon-check">✓</span> Update assets and beneficiaries as needed</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="startCheckout('trust-update')">Secure Checkout</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="text-align: center;">
+                <h3 style="color: white; margin-bottom: 15px;">Edgewater Insurance Solutions</h3>
+                <p>Protecting those who serve.</p>
+            </div>
+            <div class="footer-content">
+                <p><a href="/">Home</a></p>
+                <p style="max-width: 600px; font-size: 0.8rem; opacity: 0.7;">
+                    Payments are processed securely by Stripe.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/payment/payment.js"></script>
+</body>
+</html>
+

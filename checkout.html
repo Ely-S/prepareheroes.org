@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Edgewater Insurance Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .thank-you-section {
+            background-color: var(--primary-color);
+            padding: 80px 0;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+        }
+
+        .thank-you-grid {
+            display: grid;
+            gap: 60px;
+            align-items: center;
+            grid-template-columns: 40% 60%;
+            background-color: #ffffff;
+            padding: 60px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .thank-you-media img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            display: block;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .thank-you-content {
+            text-align: center;
+        }
+
+        .options-grid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .option-card {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .thank-you-content h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .thank-you-content .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .purchase-card {
+            background: #ffffff;
+            padding: 0;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .card-header {
+            background-color: #f1f5f9;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .card-body {
+            padding: 32px;
+        }
+
+        .order-summary {
+            margin-bottom: 24px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-top: 8px;
+            padding-top: 16px;
+            border-top: 2px solid #f1f5f9;
+        }
+
+        .purchase-card.hidden,
+        .option-card.hidden {
+            display: none;
+        }
+
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .step.active {
+            color: var(--primary-color);
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-line {
+            height: 2px;
+            width: 40px;
+            background: #e2e8f0;
+        }
+
+        .option-card h3 {
+            font-size: 1.4rem;
+            margin: 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .package-details {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            margin-top: -10px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #e2e8f0;
+        }
+
+        .dot.active {
+            background: var(--primary-color);
+            width: 12px;
+            border-radius: 3px;
+        }
+
+        .payment-info {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+            opacity: 0.7;
+        }
+
+        .payment-methods img {
+            height: 24px;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .payment-methods img:hover {
+            filter: grayscale(0%);
+        }
+
+        .contact-note {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #edf2f7;
+            text-align: center;
+        }
+
+        @media (min-width: 992px) {
+            .thank-you-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .thank-you-content h1 {
+                font-size: 2rem;
+            }
+            .purchase-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Thank You Section -->
+    <section class="thank-you-section">
+        <div class="container">
+            <div class="thank-you-grid">
+                <div class="thank-you-media">
+                    <img src="firefighter-with-dog.png" alt="Firefighter saying goodbye with dog">
+                </div>
+                <div class="thank-you-content">
+
+                    <div id="paymentContent">
+                        <h1>Complete Your Payment</h1>
+                        <p class="subtitle">
+                            You have taken the first step to preparing your family's future
+                        </p>
+    
+                        <div class="purchase-card hidden" id="purchaseCard">
+                        <div class="card-body">
+                            <!-- Dynamic Payment Button Container -->
+                            <div class="options-grid" id="stripeButtonContainer">
+                                <!-- Button will be injected here -->
+                            </div>
+    
+                            <p class="contact-note">
+                                After payment, a team member will contact you within 1-2 business days.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Free Will Message (Hidden by default) -->
+                    <div id="freeWillMessage" class="purchase-card hidden" style="padding: 40px; text-align: center;">
+                        <h2 style="color: var(--primary-color); margin-bottom: 15px;">Success!</h2>
+                        <p style="font-size: 1.1rem; color: var(--text-dark); margin-bottom: 20px;">
+                            Your Will package is <strong>100% Free</strong> as a First Responder.
+                        </p>
+                        <p style="color: var(--text-light);">
+                            We have received your information. A team member will contact you shortly to finalize your documents.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="border: none;">
+        <div class="container">
+            <div style="text-align: center;">
+                <h3 style="color: white; margin-bottom: 15px;">Edgewater Insurance Solutions</h3>
+                <p>Protecting those who serve.</p>
+            </div>
+
+            <div class="footer-content">
+                <p>&copy; 2026 Edgewater Insurance Solutions LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js" crossorigin="anonymous"></script>
+    <script>
+        // CONFIGURATION: Stripe Buy Button IDs
+        // Replace 'PLACEHOLDER' with actual IDs for the Civilian prices when available.
+        const STRIPE_BUTTON_CONFIG = {
+            responder: {
+                'will': 'buy_btn_1Sfm9mFRYDelNZfR7cWu9bDS', // Free Will Button ID
+                'trust-individual': 'buy_btn_1Srj8HFRYDelNZfRBENZo05W',
+                'trust-couple': 'buy_btn_1Srj7eFRYDelNZfROMzuQdPO',
+                'trust-update': 'buy_btn_1Sris5FRYDelNZfRmqWiKDOE'
+            },
+            civilian: {
+                'will': 'buy_btn_1Sfm9mFRYDelNZfR7cWu9bDS', // Assuming this was the existing ID, check if it's the $400 one
+                'trust-individual': 'buy_btn_1Srj8HFRYDelNZfRBENZo05W',
+                'trust-couple': 'buy_btn_1Srj7eFRYDelNZfROMzuQdPO',
+                'trust-update': 'buy_btn_1Sris5FRYDelNZfRmqWiKDOE'
+            }
+        };
+
+        const PUBLISHABLE_KEY = "pk_live_51SXpT5FRYDelNZfRVJxHYr7SqA9BGjrNKhK0wtyasqKLs3YOcIZkcvCfxD17PuE1RDbIbjMLrshX36SxgirrYvce00JYO7pyoV";
+
+        $(document).ready(function() {
+            const params = new URLSearchParams(window.location.search);
+            const selectedPackage = params.get('chosenPackage');
+            // Default to 'responder' if not specified to be safe, or 'civilian' if you prefer strictness.
+            // Based on the site's focus, defaulting to responder or checking session storage is wise.
+            let customerType = params.get('customerType');
+
+            // Fallback to session storage if URL param is missing (redundancy)
+            if (!customerType) {
+                customerType = sessionStorage.getItem('customerType') || 'responder';
+            }
+
+            // Retrieve user email from URL param (preferred) or session storage
+            let userEmail = params.get('email');
+            
+            if (!userEmail) {
+                try {
+                    const userDataRaw = sessionStorage.getItem('userData');
+                    if (userDataRaw) {
+                        const userData = JSON.parse(userDataRaw);
+                        userEmail = userData.email || '';
+                    }
+                } catch (e) {
+                    console.error('Error parsing user data for email prefill', e);
+                }
+            }
+
+            console.log(`Package: ${selectedPackage}, Type: ${customerType}, Email: ${userEmail}`);
+
+            if (selectedPackage && customerType) {
+                const buttonId = STRIPE_BUTTON_CONFIG[customerType]?.[selectedPackage];
+
+                if (buttonId === 'FREE') {
+                    // Show Free Message
+                    $('#freeWillMessage').removeClass('hidden');
+                    $('#purchaseCard').addClass('hidden'); // Ensure payment card is hidden
+                } else if (buttonId && buttonId !== 'PLACEHOLDER') {
+                    // Render Stripe Button
+                    // Add customer-email attribute if email is available
+                    const emailAttr = userEmail ? `customer-email="${userEmail}"` : '';
+                    const opportunityId = sessionStorage.getItem('opportunityId');
+                    const referenceAttr = opportunityId ? `client-reference-id="${opportunityId}"` : '';
+
+                    const stripeButtonHtml = `
+                        <div class="option-card">
+                            <stripe-buy-button
+                                buy-button-id="${buttonId}"
+                                publishable-key="${PUBLISHABLE_KEY}"
+                                ${emailAttr}
+                                ${referenceAttr}
+                            ></stripe-buy-button>
+                        </div>
+                    `;
+                    $('#stripeButtonContainer').html(stripeButtonHtml);
+                    $('#purchaseCard').removeClass('hidden');
+                    $('#freeWillMessage').addClass('hidden');
+                } else {
+                    // Handle missing config or placeholder
+                    console.error('Configuration missing for this combination:', customerType, selectedPackage);
+                    $('#stripeButtonContainer').html('<p style="color: red;">Payment option not available. Please contact support.</p>');
+                    $('#purchaseCard').removeClass('hidden');
+                }
+            } else {
+                console.error('Missing package or customer type info.');
+            }
+        });
+    </script>
+</body>
+</html>

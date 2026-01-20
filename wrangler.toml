@@ -1,0 +1,28 @@
+name = "wills-form-handler"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Route configuration for prepareheroes.org
+# Note: You need to add your Zone ID for this to work
+# Find it in Cloudflare Dashboard > prepareheroes.org > Overview (right sidebar)
+# routes = [
+#   { pattern = "prepareheroes.org/api/submit_quiz", zone_name = "prepareheroes.org" }
+# ]
+
+# Environment variables (secrets should be set using: wrangler secret put VARIABLE_NAME)
+# DO NOT put actual secret values in this file
+
+[vars]
+# Non-sensitive configuration variables can go here
+
+# To set secrets, run these commands:
+# wrangler secret put COPPER_API_KEY
+# wrangler secret put COPPER_USER_EMAIL
+# wrangler secret put COPPER_FIELD_PHONE_ID
+# wrangler secret put COPPER_FIELD_RESPONDER_STATUS_ID
+
+# If you want to test locally, create a .dev.vars file with:
+# COPPER_API_KEY=your_key_here
+# COPPER_USER_EMAIL=your_email_here
+# COPPER_FIELD_PHONE_ID=field_id_here
+# COPPER_FIELD_RESPONDER_STATUS_ID=field_id_here

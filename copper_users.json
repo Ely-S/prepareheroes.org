@@ -1,0 +1,37 @@
+[
+  {
+    "user": "caleb@edgewaterins.com",
+    "name": "Caleb Taylor",
+    "assignee_id": 1206272
+  },
+  {
+    "user": "ian@edgewaterins.com",
+    "name": "Ian Curran",
+    "assignee_id": 1202942
+  },
+  {
+    "user": "chet@edgewaterins.com",
+    "name": "Chet Radish",
+    "assignee_id": 1202913
+  },
+  {
+    "user": "eli@edgewaterins.com",
+    "name": "Eli Sakov",
+    "assignee_id": 1213114
+  },
+  {
+    "user": "james@edgewaterins.com",
+    "name": "James Garner",
+    "assignee_id": 1202796
+  },
+  {
+    "user": "sandro@edgewaterins.com",
+    "name": "Sandro Magalhaes",
+    "assignee_id": 1219949
+  },
+  {
+    "user": "natalie@edgewaterins.com",
+    "name": "Natalie Retes",
+    "assignee_id": 1206271
+  }
+]

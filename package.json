@@ -1,0 +1,33 @@
+{
+  "name": "wills-form-copper-integration",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for Copper CRM integration - Estate Planning Form",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run worker.test.js",
+    "test:integration": "vitest run worker.integration.test.js",
+    "test:coverage": "vitest run --coverage",
+    "dev": "wrangler pages dev . --compatibility-date=2024-01-01",
+    "dev:worker": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "vitest": "^2.1.8",
+    "wrangler": "^3.94.0"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "copper",
+    "crm",
+    "estate-planning"
+  ],
+  "author": "Edgewater Insurance Solutions",
+  "license": "MIT",
+  "dependencies": {
+    "stripe": "^20.2.0"
+  }
+}

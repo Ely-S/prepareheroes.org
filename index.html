@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SF First Responders Estate Planning | Edgewater Insurance Solutions</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="LOGO.jpg" alt="Edgewater Insurance Solutions Logo" style="height: 90px; width: auto; vertical-align: middle;">
+            </div>
+            <button onclick="openQuestionnaire('will')" class="btn btn-primary">Get Started</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-left">
+                <h1>We Prepare Those Who Protect us</h1>
+            </div>
+            
+            <div class="hero-right">
+                <div class="hero-badge" style="background-color: #e53e3e; color: white; border: none;">Limited Time Offer: Expires April 30th</div>
+                <h2 style="margin-bottom: 1rem; color: #fff;">100% Free</h2>
+                <ul style="list-style: none; padding: 0; font-size: 1.3rem; color: #fff; margin-bottom: 1.5rem; font-weight: 500;">
+                    <li style="margin-bottom: 8px;">✓ Last Will & Testament</li>
+                    <li style="margin-bottom: 8px;">✓ Durable Power of Attorney</li>
+                    <li style="margin-bottom: 8px;">✓ Advance Health Care Directive</li>
+                    <li style="margin-bottom: 8px;">✓ HIPAA Authorization</li>
+                </ul>
+                
+                <p style="margin-bottom: 2rem; color: #e0f7fa;">For all active and retired First Responders.</p>
+                <button onclick="openQuestionnaire('will')" class="btn btn-primary btn-block" style="font-size: 1.1rem; padding: 15px;">Create Your Free Will</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section class="section-padding offer" id="offer">
+        <div class="container">
+            <h2>You Serve Us, Let Us Serve You.</h2>
+            
+            <div class="comparison-chart">
+                <div class="comp-card">
+                    <h4>Typical Lawyer Fee</h4>
+                    <div class="price-large strike">$1,700</div>
+                    <p>Standard market rate</p>
+                </div>
+                <div class="comp-card highlight">
+                    <h4>For First Responders & their immediate family
+                    </h4>
+                    <div class="price-large">$0</div>
+                    <p>Free for Wills / $500+ for Trusts</p>
+                </div>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-item"><span class="icon-check">✓</span> 100% Online</div>
+                <div class="benefit-item"><span class="icon-check">✓</span> Legally Binding</div>
+                <div class="benefit-item"><span class="icon-check">✓</span> Speak to Attorney if Needed*</div>
+            </div>
+            <div style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: var(--text-light); font-style: italic;">
+                *Attorney Consultation charged at an additional fee
+            </div>
+        </div>
+    </section>
+
+    <!-- Package Selection Widget -->
+    <section class="section-padding packages" id="packages">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2>Select Your Package</h2>
+            </div>
+
+            <div class="toggle-container">
+                <div class="toggle-bg">
+                    <div class="toggle-option active" onclick="setCustomerType('responder')">First Responder</div>
+                    <div class="toggle-option" onclick="setCustomerType('civilian')">Civilian</div>
+                </div>
+            </div>
+
+            <div class="cards-container">
+                <!-- Will Package -->
+                <div class="package-card">
+                    <h3>Will Package</h3>
+                    <div class="price-container">
+                         <div class="base-price strike" id="base-will"></div>
+                         <div class="package-price" id="price-will">$0</div>
+                    </div>
+                    <p><strong>Until April 30th</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> Last Will & Testament</li>
+                        <li><span class="icon-check">✓</span> Durable Power of Attorney</li>
+                        <li><span class="icon-check">✓</span> Advance Health Care Directive</li>
+                        <li><span class="icon-check">✓</span> HIPAA Authorization</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="openQuestionnaire('will')">Start Will</button>
+                </div>
+
+                <!-- Trust (Individual) -->
+                <div class="package-card featured">
+                    <div class="card-badge">Recommended</div>
+                    <h3>Trust (Individual)</h3>
+                    <div class="price-container">
+                         <div class="base-price strike" id="base-trust-ind"></div>
+                         <div class="package-price" id="price-trust-ind">$500</div>
+                    </div>
+                    <p><strong>Avoids Probate Court</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> <strong>Everything in Will</strong></li>
+                        <li class="feature-plus">PLUS:</li>
+                        <li><span class="icon-check">✓</span> Revocable Living Trust</li>
+                        <li><span class="icon-check">✓</span> Transfer Deed for Home (CA)</li>
+                        <li><span class="icon-check">✓</span> Privacy Protection</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="openQuestionnaire('trust-individual')">Choose Trust</button>
+                </div>
+
+                <!-- Trust (Couples) -->
+                <div class="package-card featured">
+                    <div class="card-badge">Best Value</div>
+                    <h3>Trust (Couples)</h3>
+                    <div class="price-container">
+                         <div class="base-price strike" id="base-trust-couple"></div>
+                         <div class="package-price" id="price-trust-couple">$750</div>
+                    </div>
+                    <p><strong>Complete Family Protection</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> <strong>Joint Couple's Trusts</strong></li>
+                        <li class="feature-plus">PLUS:</li>
+                        <li><span class="icon-check">✓</span> Mirror Wills for Both</li>
+                        <li><span class="icon-check">✓</span> Joint Asset Protection</li>
+                        <li><span class="icon-check">✓</span> Spousal Provisions</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="openQuestionnaire('trust-couple')">Choose Couples Trust</button>
+                </div>
+
+                <!-- Update Existing Trust -->
+                <div class="package-card">
+                    <h3>Update Existing Trust</h3>
+                    <div class="price-container">
+                         <div class="base-price strike" id="base-trust-update"></div>
+                         <div class="package-price" id="price-trust-update">$350</div>
+                    </div>
+                    <p><strong>With free updates anytime</strong></p>
+                    <ul class="package-features">
+                        <li><span class="icon-check">✓</span> <strong>Everything in Will</strong></li>
+                        <li class="feature-plus">PLUS:</li>
+                        <li><span class="icon-check">✓</span> We will use your existing trust as a starting point to create a new trust</li>
+                        <li><span class="icon-check">✓</span> Update assets and beneficiaries as needed</li>
+                    </ul>
+                    <button class="btn btn-primary btn-block" onclick="openQuestionnaire('trust-update')">Update My Trust</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Educational Section -->
+    <section class="section-padding education" id="trust-education">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 40px;">Do I Need a Trust?</h2>
+            
+            <div class="education-grid" style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;">
+                
+                <!-- Flowchart Column -->
+                <div class="flowchart-box" style="flex: 1; min-width: 300px; margin: 0;">
+                    <h3 style="margin-bottom: 20px; text-transform: none;">The Simple Test</h3>
+                    <div class="flow-step"><strong>1. Do you own a home in California?</strong></div>
+                    <div style="margin: 10px 0; color: var(--text-light); font-weight: bold;">OR</div>
+                    <div class="flow-step"><strong>2. Do you have children?</strong></div>
+                    <div style="margin: 10px 0; color: var(--text-light); font-weight: bold;">OR</div>
+                    <div class="flow-step"><strong>3. Are your assets over $184,500?</strong></div>
+                    <div style="margin: 15px 0;"></div>
+                    <div class="flow-step" style="color: var(--primary-color); font-weight: bold; font-size: 1.2rem;">If YES, you may need a Trust.</div>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: var(--text-light);">Without a Trust, your estate might be subject to Probate Court before your family can inherit certain assets</p>
+                </div>
+
+                <!-- Details Column -->
+                <div class="details-box" style="flex: 1; min-width: 300px;">
+                    <h3 style="margin-bottom: 20px; text-transform: none;">Why Avoid Probate?</h3>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 20px; display: flex; gap: 15px;">
+                            <div style="background: #ffebee; color: #c62828; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-family: sans-serif;">$$</div>
+                            <div>
+                                <strong style="color: var(--primary-color);">It's Expensive</strong>
+                                <p style="font-size: 0.95rem; color: var(--text-light);">California probate fees are set by law and based on the <em>gross</em> value of your estate. For a median SF home ($1.3M), fees can easily exceed <strong>$50,000</strong>.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; gap: 15px;">
+                            <div style="background: #fff3e0; color: #ef6c00; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-family: sans-serif;">⏱</div>
+                            <div>
+                                <strong style="color: var(--primary-color);">It's Slow</strong>
+                                <p style="font-size: 0.95rem; color: var(--text-light);">Probate freezes your assets. On average, it takes <strong>12 to 18 months</strong> for heirs to receive their inheritance. Trusts are instant.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 20px; display: flex; gap: 15px;">
+                            <div style="background: #e3f2fd; color: #1565c0; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-family: sans-serif;">👁</div>
+                            <div>
+                                <strong style="color: var(--primary-color);">It's Public</strong>
+                                <p style="font-size: 0.95rem; color: var(--text-light);">Wills become public record. Anyone can see what you owned and who you left it to. Trusts remain 100% private.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section-padding steps" id="how-it-works">
+        <div class="container">
+            <h2 style="text-align: center;">How It Works</h2>
+            <p style="text-align: center; color: #cbd5e1;">We help you every step of the way.</p>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <h3>Create Account</h3>
+                    <p>Enter your DSW # to verify your First Responder status.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <h3>Answer Questions</h3>
+                    <p>Create your Estate Plan by answering simple questions.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
+                    <h3>Download & Sign</h3>
+                    <p>Print your documents and notarize following our guide.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us -->
+    <section class="section-padding about" id="about">
+        <div class="container about-content">
+            <h2>About Us</h2>
+            <p style="margin: 20px 0;">
+                We are <strong>Edgewater Insurance Solutions</strong>. We pride ourselves in providing the best coverage to First Responders, having proudly served the community for over 17 years.
+            </p>
+            
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px;">
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-padding faq" style="background: #fff;">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 40px;">Frequently Asked Questions</h2>
+            <div style="max-width: 800px; margin: 0 auto;">
+                
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">Why do I need a Will?</h3>
+                    <p style="color: var(--text-light);">A Will allows you to specify who inherits your assets and, most importantly for parents, who becomes the guardian of your minor children. Without one, the state decides these critical matters for you.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">What is a Power of Attorney?</h3>
+                    <p style="color: var(--text-light);">A Durable Power of Attorney appoints someone you trust to handle your financial affairs if you become incapacitated. This ensures your bills get paid and your family is provided for without needing court intervention.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">Why is a Trust better than just a Will?</h3>
+                    <p style="color: var(--text-light);">While a Will goes through Probate Court (which is public, expensive, and slow), a Living Trust keeps your estate private and allows for the immediate transfer of assets to your heirs, bypassing the courts entirely.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">What is an Advance Health Care Directive?</h3>
+                    <p style="color: var(--text-light);">This document outlines your medical wishes if you cannot speak for yourself. It guides your doctors and family on critical decisions regarding life support and end-of-life care, relieving them of the burden of guessing your desires.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">What is a Living Will and Trust?</h3>
+                    <p style="color: var(--text-light);">People often confuse these two. A <strong>Living Will</strong> (or Advance Health Care Directive) guides your doctors on medical treatment if you're incapacitated. A <strong>Living Trust</strong> manages your financial assets to avoid probate and minimize taxes. Both are essential parts of a complete estate plan.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">How long does the process take?</h3>
+                    <p style="color: var(--text-light);">Our streamlined online process is designed to be efficient. Most users complete their estate plan questionnaire in about 15-20 minutes. Once you submit your answers, your documents are generated instantly for you to download and print.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">Is my information secure?</h3>
+                    <p style="color: var(--text-light);">Absolutely. We use bank-level encryption to protect your personal data. Your information is never sold to third parties and is used solely for the purpose of generating your legal documents.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">Can I update my documents later?</h3>
+                    <p style="color: var(--text-light);">Yes. Life changes, and your estate plan should too. Whether you have a new child, buy a new home, or want to change a beneficiary, you can log back in and update your documents easily.</p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.3rem; color: var(--primary-color); margin-bottom: 10px; text-transform: none;">Do I need to notarize my documents?</h3>
+                    <p style="color: var(--text-light);">Yes. For your documents to be legally binding in California, they must be signed in the presence of a notary public. We provide clear instructions on how to do this properly.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="text-align: center;">
+                <h3 style="color: white; margin-bottom: 15px;">Edgewater Insurance Solutions</h3>
+                <p>Protecting those who serve.</p>
+            </div>
+
+            <div class="footer-content">
+                <p><a href="#">Contact Support</a> | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+                <p style="max-width: 600px; font-size: 0.8rem; opacity: 0.7;">
+                    Disclaimer: Edgewater Insurance Solutions is not a law firm and cannot provide legal advice. We provide self-help services at your specific direction.
+                </p>
+                <p>&copy; 2023 Edgewater Insurance Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Questionnaire Modal -->
+    <div class="modal-overlay" id="questionnaireModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeQuestionnaire()">&times;</button>
+
+            <!-- Questionnaire Form Section -->
+            <div id="questionnaireFormSection">
+                <div class="questionnaire-title">
+                    <h2>Get Started</h2>
+                    <p>Please provide the following information to begin your estate plan</p>
+                </div>
+
+                <form id="questionnaireForm" onsubmit="submitQuestionnaire(event)">
+                <!-- Name -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                        <div class="error-message" id="firstName-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                        <div class="error-message" id="lastName-error"></div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="email-error"></div>
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+                    <div class="error-message" id="phone-error"></div>
+                </div>
+
+                <!-- First Responder Status -->
+                <div class="form-group">
+                    <label for="responderStatus">First Responder Status *</label>
+                    <select id="responderStatus" name="responderStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="active">Active</option>
+                        <option value="retired">Retired</option>
+                        <option value="civilian">Civilian</option>
+                    </select>
+                    <div class="error-message" id="responderStatus-error"></div>
+                </div>
+
+                <!-- DSW# and Department -->
+                <div class="form-row" id="responderFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="dswNumber">DSW Number *</label>
+                        <input type="text" id="dswNumber" name="dswNumber" placeholder="Enter your DSW number">
+                        <div class="error-message" id="dswNumber-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department *</label>
+                        <input type="text" id="department" name="department" placeholder="e.g., SFFD, SFPD">
+                        <div class="error-message" id="department-error"></div>
+                    </div>
+                </div>
+
+                <!-- Marital Status -->
+                <div class="form-group">
+                    <label for="maritalStatus">Marital Status *</label>
+                    <select id="maritalStatus" name="maritalStatus" required>
+                        <option value="">Select Status</option>
+                        <option value="single">Single</option>
+                        <option value="married">Married</option>
+                        <option value="divorced">Divorced</option>
+                        <option value="widowed">Widowed</option>
+                        <option value="domestic-partnership">Domestic Partnership</option>
+                    </select>
+                    <div class="error-message" id="maritalStatus-error"></div>
+                </div>
+
+                <!-- Number of Dependants -->
+                <div class="form-group">
+                    <label for="dependants">Number of Dependants *</label>
+                    <input type="number" id="dependants" name="dependants" min="0" value="0" required>
+                    <div class="error-message" id="dependants-error"></div>
+                </div>
+
+                <!-- Own Real Estate -->
+                <div class="form-group">
+                    <label>Do you own real estate? *</label>
+                    <div class="radio-group">
+                        <div class="form-group-inline">
+                            <input type="radio" id="realEstateYes" name="realEstate" value="yes" required>
+                            <label for="realEstateYes">Yes</label>
+                        </div>
+                        <div class="form-group-inline">
+                            <input type="radio" id="realEstateNo" name="realEstate" value="no">
+                            <label for="realEstateNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Has Life Insurance -->
+                <div class="form-group">
+                    <label>Do you have life insurance? *</label>
+                    <div class="radio-group">
+                        <div class="form-group-inline">
+                            <input type="radio" id="lifeInsuranceYes" name="lifeInsurance" value="yes" required>
+                            <label for="lifeInsuranceYes">Yes</label>
+                        </div>
+                        <div class="form-group-inline">
+                            <input type="radio" id="lifeInsuranceNo" name="lifeInsurance" value="no">
+                            <label for="lifeInsuranceNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Has Existing Trust -->
+                <div class="form-group">
+                    <label>Do you have an existing trust? *</label>
+                    <div class="radio-group">
+                        <div class="form-group-inline">
+                            <input type="radio" id="existingTrustYes" name="existingTrust" value="yes" required>
+                            <label for="existingTrustYes">Yes</label>
+                        </div>
+                        <div class="form-group-inline">
+                            <input type="radio" id="existingTrustNo" name="existingTrust" value="no">
+                            <label for="existingTrustNo">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referred By -->
+                <div class="form-group">
+                    <label for="referredBy">Who have you spoken to? (Optional)</label>
+                    <select id="referredBy" name="referredBy">
+                        <option value="">Select Representative</option>
+                        <option value="Caleb Taylor">Caleb Taylor</option>
+                        <option value="Chet Radish">Chet Radish</option>
+                        <option value="Eli Sakov">Eli Sakov</option>
+                        <option value="Ian Curran">Ian Curran</option>
+                        <option value="James Garner">James Garner</option>
+                        <option value="Natalie Retes">Natalie Retes</option>
+                        <option value="Sandro Magalhaes">Sandro Magalhaes</option>
+                    </select>
+                    <div class="error-message" id="referredBy-error"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 30px;">Submit & Continue</button>
+                </form>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div id="recommendationsSection" class="recommendations-section">
+                <div class="questionnaire-title">
+                    <h2>Your Personalized Recommendations</h2>
+                    <p>Based on your answers, here's what we recommend</p>
+                </div>
+
+                <div id="recommendedPackage"></div>
+
+                <div class="other-options">
+                    <h3>Other Options</h3>
+                    <div id="otherPackages"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

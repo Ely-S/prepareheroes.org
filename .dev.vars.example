@@ -1,0 +1,14 @@
+# Copper CRM API Configuration
+# Copy this file to .dev.vars for local development
+# For production, use: wrangler secret put VARIABLE_NAME
+
+# Your Copper API Key
+COPPER_API_KEY=44e1c276e36cd4108fff6d5b41ba911c
+
+# Your Copper account email
+COPPER_USER_EMAIL=your-email@example.com
+
+# Optional: Custom field IDs from your Copper account
+# To find these, go to Settings > Custom Fields in Copper
+COPPER_FIELD_PHONE_ID=123456
+COPPER_FIELD_RESPONDER_STATUS_ID=123457

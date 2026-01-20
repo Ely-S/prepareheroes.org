@@ -1,0 +1,22 @@
+# Cloudflare Workers
+.dev.vars
+.wrangler/
+wrangler.toml.backup
+
+# Node modules (if you add any)
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

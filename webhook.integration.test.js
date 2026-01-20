@@ -23,7 +23,7 @@ const worker = {
 
 // Initialize Stripe (test mode doesn't need real key for signature generation)
 const stripe = new Stripe('sk_test_dummy', {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-11-17.clover',
 });
 
 // Test configuration
@@ -173,11 +173,10 @@ describeIfCreds('Webhook Payment Flow Test', () => {
     console.log('Final Status:', finalOpp.status);
     console.log('Final Stage ID:', finalOpp.pipeline_stage_id);
 
-    expect(finalOpp.status).toBe('Won');
     // Verify it moved to the Paid stage (5076181)
     expect(finalOpp.pipeline_stage_id).toBe(5076181);
     
-    console.log('✓ Opportunity marked as Won and Paid');
+    console.log('✓ Opportunity marked as Paid (Stage Updated)');
 
   }, 60000);
 

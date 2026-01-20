@@ -1,5 +1,6 @@
 
 import Stripe from 'stripe';
+import { findPersonByEmail, findPersonByPhone, findOpenOpportunityForPerson, markOpportunityPaid } from '../copper.api.ts';
 
 /**
  * Cloudflare Pages Function to handle Stripe Webhooks
@@ -14,7 +15,7 @@ export async function onRequest(context) {
 
   // Initialize Stripe
   const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: '2023-10-16', // Use a recent API version
+    apiVersion: '2025-11-17.clover', // Using user specific version
     httpClient: Stripe.createFetchHttpClient(), // Ensure Cloudflare Worker compatibility
   });
 
@@ -91,96 +92,4 @@ async function handlePaymentSuccess(session, env) {
   } else {
     console.warn(`[Stripe Webhook] No matching Opportunity found. Session: ${session.id}`);
   }
-}
-
-// --- Copper API Helpers ---
-
-const COPPER_API_URL = 'https://api.copper.com/developer_api/v1';
-const ESTATE_PLANNING_PIPELINE_ID = 1130648;
-const PAID_STAGE_ID = 5076181;
-
-function getHeaders(env) {
-  return {
-    'Content-Type': 'application/json',
-    'X-PW-AccessToken': env.COPPER_API_KEY,
-    'X-PW-Application': 'developer_api',
-    'X-PW-UserEmail': env.COPPER_USER_EMAIL
-  };
-}
-
-async function findPersonByEmail(email, env) {
-  const response = await fetch(`${COPPER_API_URL}/people/search`, {
-    method: 'POST',
-    headers: getHeaders(env),
-    body: JSON.stringify({
-      emails: [email],
-      page_size: 1
-    })
-  });
-  if (!response.ok) return null;
-  const data = await response.json();
-  return data.length > 0 ? data[0] : null;
-}
-
-async function findPersonByPhone(phone, env) {
-  const response = await fetch(`${COPPER_API_URL}/people/search`, {
-    method: 'POST',
-    headers: getHeaders(env),
-    body: JSON.stringify({
-      phone_number: phone, // Fuzzy match by default for 7+ digits
-      page_size: 1
-    })
-  });
-  if (!response.ok) return null;
-  const data = await response.json();
-  return data.length > 0 ? data[0] : null;
-}
-
-async function findOpenOpportunityForPerson(personId, env) {
-  // Search for OPEN opportunities in the specific pipeline for this contact
-  const response = await fetch(`${COPPER_API_URL}/opportunities/search`, {
-    method: 'POST',
-    headers: getHeaders(env),
-    body: JSON.stringify({
-      primary_contact_ids: [personId],
-      pipeline_ids: [ESTATE_PLANNING_PIPELINE_ID],
-      status: ['Open'],
-      page_size: 5 // Fetch a few to check ambiguity
-    })
-  });
-  
-  if (!response.ok) return null;
-  const data = await response.json();
-
-  if (data.length === 0) return null;
-  
-  // If multiple, ideally we pick the most recent one? 
-  // For now, let's pick the first one (most recently modified usually, or check sort)
-  // Default sort is typically date_modified descending or relevance.
-  // Let's assume the first one is the best candidate.
-  if (data.length > 1) {
-    console.log(`[Stripe Webhook] Multiple open opportunities found for person ${personId}. Using the first one.`);
-  }
-  
-  return data[0].id;
-}
-
-async function markOpportunityPaid(opportunityId, env) {
-  const response = await fetch(`${COPPER_API_URL}/opportunities/${opportunityId}`, {
-    method: 'PUT',
-    headers: getHeaders(env),
-    body: JSON.stringify({
-      pipeline_stage_id: PAID_STAGE_ID,
-      status: 'Won'
-    })
-  });
-  
-  if (!response.ok) {
-    const txt = await response.text();
-    console.error(`[Stripe Webhook] Failed to update opportunity ${opportunityId}: ${txt}`);
-    throw new Error(`Copper update failed: ${response.status}`);
-  }
-  
-  console.log(`[Stripe Webhook] Successfully updated opportunity ${opportunityId}`);
-  return await response.json();
 }

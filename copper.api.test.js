@@ -1,8 +1,9 @@
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 import * as copperApi from './functions/copper.api.ts';
 
 // Mock Fetch
+const originalFetch = global.fetch;
 global.fetch = vi.fn();
 
 // Mock Environment
@@ -14,6 +15,11 @@ const mockEnv = {
 describe('Copper API Client', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
+    global.fetch = originalFetch;
   });
 
   describe('getCopperHeaders', () => {

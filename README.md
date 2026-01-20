@@ -145,6 +145,33 @@ POST https://prepareheroes.org/api/submit
 }
 ```
 
+## Payment Process & Webhooks
+
+### Payment Flow
+1. **Frontend**: When a user selects a paid package (Trusts), the `checkout.html` page renders a Stripe Buy Button.
+   - The button includes a `client-reference-id` attribute set to the Copper Opportunity ID (created during the quiz submission).
+   - Stripe collects customer email and phone number during checkout.
+
+2. **Stripe Webhook**:
+   - URL: `https://prepareheroes.org/api/stripe_webhook`
+   - Listens for `checkout.session.completed` and `invoice.payment_succeeded`.
+
+3. **Opportunity Matching (Waterfall Logic)**:
+   - **Direct Match**: Checks if `client_reference_id` or `metadata.opportunity_id` matches an existing Opportunity ID.
+   - **Email Fallback**: If no ID, searches Copper for a Person by `customer_email`, then finds their *Open* Opportunity in the Estate Planning pipeline.
+   - **Phone Fallback**: If email fails, searches Copper for a Person by `customer_phone`, then finds their *Open* Opportunity.
+
+4. **Outcome**:
+   - If matched, the Copper Opportunity is moved to the **"Paid"** stage (Stage ID: `5076181`).
+   - The status remains "Open" (or "Won" if configured) to allow for further processing.
+
+### Testing Payments
+Run the integration test to simulate the full flow (Create Opportunity -> Simulate Webhook -> Verify Paid Stage):
+
+```bash
+npm run test webhook.integration.test.js
+```
+
 ## Environment Variables
 
 | Variable | Description | Required |

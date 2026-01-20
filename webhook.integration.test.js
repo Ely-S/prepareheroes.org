@@ -141,7 +141,7 @@ describeIfCreds('Webhook Payment Flow Test', () => {
     };
 
     const payloadString = JSON.stringify(webhookPayload);
-    const signature = stripe.webhooks.generateTestHeaderString({
+    const signature = await stripe.webhooks.generateTestHeaderStringAsync({
       payload: payloadString,
       secret: TEST_CONFIG.STRIPE_WEBHOOK_SECRET
     });

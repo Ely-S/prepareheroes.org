@@ -3,8 +3,10 @@
  * Run with: npm test
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import worker from './worker.js';
+
+const originalFetch = global.fetch;
 
 // Mock environment variables
 const mockEnv = {
@@ -53,6 +55,11 @@ describe('Cloudflare Worker - Copper CRM Integration', () => {
   beforeEach(() => {
     // Reset all mocks before each test
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    global.fetch = originalFetch;
   });
 
   describe('CORS Handling', () => {

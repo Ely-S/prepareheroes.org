@@ -24,21 +24,32 @@ export async function onRequest(context) {
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(body, signature, env.STRIPE_WEBHOOK_SECRET);
+    event = await stripe.webhooks.constructEventAsync(
+      body,
+      signature,
+      env.STRIPE_WEBHOOK_SECRET
+    );
   } catch (err) {
     console.error(`Webhook signature verification failed: ${err.message}`);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
   // Handle relevant events
-  if (event.type === 'checkout.session.completed' || event.type === 'invoice.payment_succeeded') {
+  if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     try {
-      await handlePaymentSuccess(session, env);
+      await handleCheckoutSessionSuccess(session, env);
     } catch (error) {
-      console.error('Error handling payment success:', error);
-      // Return 200 to Stripe to prevent retries if it's a logic error we can't fix
-      // But if it's transient, maybe 500? For now, 200 to be safe against loops.
+      console.error('Error handling checkout.session.completed:', error);
+      return new Response('Webhook handler failed', { status: 500 });
+    }
+  } else if (event.type === 'invoice.payment_succeeded') {
+    const invoice = event.data.object;
+    try {
+      await handleInvoicePaymentSuccess(invoice, env, stripe);
+    } catch (error) {
+      console.error('Error handling invoice.payment_succeeded:', error);
+      return new Response('Webhook handler failed', { status: 500 });
     }
   }
 
@@ -50,7 +61,7 @@ export async function onRequest(context) {
 /**
  * Waterfall logic to find and update the Copper Opportunity
  */
-async function handlePaymentSuccess(session, env) {
+async function handleCheckoutSessionSuccess(session, env) {
   let opportunityId = session.client_reference_id || session.metadata?.opportunity_id;
   let matchMethod = 'direct_id';
 
@@ -91,5 +102,61 @@ async function handlePaymentSuccess(session, env) {
     await markOpportunityPaid(opportunityId, env);
   } else {
     console.warn(`[Stripe Webhook] No matching Opportunity found. Session: ${session.id}`);
+  }
+}
+
+/**
+ * Invoice handler (customers/subscriptions)
+ */
+async function handleInvoicePaymentSuccess(invoice, env, stripe) {
+  let opportunityId = invoice.metadata?.opportunity_id;
+  let matchMethod = 'direct_id';
+
+  if (opportunityId) {
+    console.log(`[Stripe Webhook] Found direct Opportunity ID: ${opportunityId}`);
+  }
+
+  const customerId = typeof invoice.customer === 'string' ? invoice.customer : invoice.customer?.id;
+  let customer = null;
+
+  if (customerId) {
+    try {
+      customer = await stripe.customers.retrieve(customerId);
+    } catch (error) {
+      console.warn('[Stripe Webhook] Failed to retrieve Stripe customer for invoice.', error);
+    }
+  }
+
+  // Email fallback
+  if (!opportunityId) {
+    const email = invoice.customer_email || customer?.email;
+    if (email) {
+      console.log(`[Stripe Webhook] Looking up by email: ${email}`);
+      const person = await findPersonByEmail(email, env);
+      if (person) {
+        opportunityId = await findOpenOpportunityForPerson(person.id, env);
+        if (opportunityId) matchMethod = 'email_fallback';
+      }
+    }
+  }
+
+  // Phone fallback
+  if (!opportunityId) {
+    const phone = customer?.phone;
+    if (phone) {
+      console.log(`[Stripe Webhook] Looking up by phone: ${phone}`);
+      const person = await findPersonByPhone(phone, env);
+      if (person) {
+        opportunityId = await findOpenOpportunityForPerson(person.id, env);
+        if (opportunityId) matchMethod = 'phone_fallback';
+      }
+    }
+  }
+
+  if (opportunityId) {
+    console.log(`[Stripe Webhook] Match found via ${matchMethod}. Updating Opportunity ${opportunityId} to Won/Paid.`);
+    await markOpportunityPaid(opportunityId, env);
+  } else {
+    console.warn(`[Stripe Webhook] No matching Opportunity found. Invoice: ${invoice.id}`);
   }
 }

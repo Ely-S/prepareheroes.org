@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A3B5C">
     <title>Checkout | Edgewater Insurance Solutions</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
@@ -257,6 +258,19 @@
         }
 
         @media (max-width: 768px) {
+            .thank-you-section {
+                padding: 0;
+            }
+            .thank-you-grid {
+                grid-template-columns: 1fr;
+                padding: 40px 20px;
+                gap: 30px;
+                border-radius: 0;
+            }
+            .thank-you-media img {
+                max-height: 50vh;
+                object-fit: cover;
+            }
             .thank-you-content h1 {
                 font-size: 2rem;
             }

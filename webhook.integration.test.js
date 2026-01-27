@@ -29,7 +29,8 @@ const stripe = new Stripe('sk_test_dummy', {
 // Test configuration
 const TEST_CONFIG = {
   COPPER_API_URL: 'https://api.copper.com/developer_api/v1',
-  STRIPE_WEBHOOK_SECRET: 'whsec_test_secret_12345'
+  STRIPE_WEBHOOK_SECRET: 'whsec_test_secret_12345',
+  PAYMENT_LINK_FIELD_ID: 727706
 };
 
 // Environment variables
@@ -112,11 +113,17 @@ describeIfCreds('Webhook Payment Flow Test', () => {
     expect(createRes.status).toBe(200);
     expect(createResult.success).toBe(true);
     createdOpportunityId = createResult.opportunityId;
+    expect(createResult.checkoutLink).toBe(`https://prepareheroes.org/c/${createdOpportunityId}`);
     console.log(`✓ Opportunity created: ${createdOpportunityId}`);
 
     // 2. Validate Initial State
+    await new Promise(resolve => setTimeout(resolve, 5000));
     const initialOpp = await copperApiRequest(`/opportunities/${createdOpportunityId}`);
     expect(initialOpp.status).not.toBe('Won');
+    const paymentLinkField = (initialOpp.custom_fields || []).find(
+      (field) => String(field.custom_field_definition_id) === String(TEST_CONFIG.PAYMENT_LINK_FIELD_ID)
+    );
+    expect(paymentLinkField?.value).toBe(`https://prepareheroes.org/c/${createdOpportunityId}`);
     console.log(`✓ Initial status verified: ${initialOpp.status}`);
 
     // 3. Simulate Stripe Webhook

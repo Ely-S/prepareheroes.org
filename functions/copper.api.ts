@@ -19,7 +19,7 @@ const FIELD_IDS = {
   existingTrust: 722619,
   selectedPackage: 722620,
   referredBy: 723226,
-  paymentLink: 36791091
+  paymentLink: 727706
 };
 
 function escapeRegExp(value: string) {
@@ -181,6 +181,7 @@ export async function findOpenOpportunityForPerson(personId, env) {
 export async function upsertCheckoutDetails(opportunityId, env, { checkoutLink, checkoutState }: { checkoutLink?: string; checkoutState?: string }) {
   const url = `${COPPER_API_URL}/opportunities/${opportunityId}`;
   let existingDetails = '';
+  let existingCustomFields: { custom_field_definition_id: number; value: any }[] = [];
 
   try {
     const existingResponse = await fetch(url, {
@@ -190,6 +191,7 @@ export async function upsertCheckoutDetails(opportunityId, env, { checkoutLink, 
     if (existingResponse.ok) {
       const existing = await existingResponse.json();
       existingDetails = existing?.details || '';
+      existingCustomFields = Array.isArray(existing?.custom_fields) ? existing.custom_fields : [];
     }
   } catch (error) {
     console.warn(`[Copper API] Failed to fetch existing opportunity ${opportunityId}:`, error);
@@ -205,7 +207,15 @@ export async function upsertCheckoutDetails(opportunityId, env, { checkoutLink, 
   };
 
   if (checkoutLink) {
+    const normalizedFields = existingCustomFields.map((field) => ({
+      custom_field_definition_id: field.custom_field_definition_id,
+      value: field.value
+    }));
+    const filteredFields = normalizedFields.filter(
+      (field) => String(field.custom_field_definition_id) !== String(FIELD_IDS.paymentLink)
+    );
     payload.custom_fields = [
+      ...filteredFields,
       {
         custom_field_definition_id: FIELD_IDS.paymentLink,
         value: checkoutLink
@@ -223,6 +233,27 @@ export async function upsertCheckoutDetails(opportunityId, env, { checkoutLink, 
     const txt = await response.text();
     console.error(`[Copper API] Failed to update checkout details ${opportunityId}: ${txt}`);
     throw new Error(`Copper update failed: ${response.status}`);
+  }
+
+  if (checkoutLink) {
+    const paymentLinkResponse = await fetch(url, {
+      method: 'PUT',
+      headers: getCopperHeaders(env),
+      body: JSON.stringify({
+        custom_fields: [
+          {
+            custom_field_definition_id: FIELD_IDS.paymentLink,
+            value: checkoutLink
+          }
+        ]
+      })
+    });
+
+    if (!paymentLinkResponse.ok) {
+      const txt = await paymentLinkResponse.text();
+      console.error(`[Copper API] Failed to update payment link ${opportunityId}: ${txt}`);
+      throw new Error(`Copper update failed: ${paymentLinkResponse.status}`);
+    }
   }
 
   return await response.json();

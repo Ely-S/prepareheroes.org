@@ -348,6 +348,7 @@
         $(document).ready(function() {
             const params = new URLSearchParams(window.location.search);
             const selectedPackage = params.get('chosenPackage');
+            const opportunityIdParam = params.get('opportunityId');
             // Default to 'responder' if not specified to be safe, or 'civilian' if you prefer strictness.
             // Based on the site's focus, defaulting to responder or checking session storage is wise.
             let customerType = params.get('customerType');
@@ -355,6 +356,10 @@
             // Fallback to session storage if URL param is missing (redundancy)
             if (!customerType) {
                 customerType = sessionStorage.getItem('customerType') || 'responder';
+            }
+
+            if (opportunityIdParam) {
+                sessionStorage.setItem('opportunityId', opportunityIdParam);
             }
 
             // Retrieve user email from URL param (preferred) or session storage
@@ -385,7 +390,7 @@
                     // Render Stripe Button
                     // Add customer-email attribute if email is available
                     const emailAttr = userEmail ? `customer-email="${userEmail}"` : '';
-                    const opportunityId = sessionStorage.getItem('opportunityId');
+                    const opportunityId = opportunityIdParam || sessionStorage.getItem('opportunityId');
                     const referenceAttr = opportunityId ? `client-reference-id="${opportunityId}"` : '';
 
                     const stripeButtonHtml = `

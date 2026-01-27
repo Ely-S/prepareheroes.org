@@ -3,7 +3,7 @@
  * This function is automatically available at /api/submit_quiz
  */
 
-import { findPersonByEmail, createPerson, updatePersonPhone, createCopperOpportunity } from '../copper.api.ts';
+import { findPersonByEmail, createPerson, updatePersonPhone, createCopperOpportunity, upsertCheckoutDetails } from '../copper.api.ts';
 
 /**
  * Handle all requests (GET, POST, OPTIONS, etc.)
@@ -49,10 +49,17 @@ export async function onRequest(context) {
 
     // 2. Create opportunity in Copper CRM (Estate Planning pipeline)
     const opportunity = await createCopperOpportunity(formData, personId, env);
+    const baseUrl = new URL(request.url).origin;
+    const checkoutLink = `${baseUrl}/c/${opportunity.id}`;
+    await upsertCheckoutDetails(opportunity.id, env, {
+      checkoutLink,
+      checkoutState: 'Pending'
+    });
 
     return corsResponse({
       success: true,
       opportunityId: opportunity.id,
+      checkoutLink,
       message: 'Estate planning form submitted successfully'
     });
 

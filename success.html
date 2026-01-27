@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Complete | Edgewater Insurance Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .thank-you-section {
+            background-color: var(--primary-color);
+            padding: 80px 0;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+        }
+
+        .thank-you-grid {
+            display: grid;
+            gap: 60px;
+            align-items: center;
+            grid-template-columns: 40% 60%;
+            background-color: #ffffff;
+            padding: 60px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .thank-you-media img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            display: block;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .thank-you-content {
+            text-align: center;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .thank-you-content h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .thank-you-content .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        @media (min-width: 992px) {
+            .thank-you-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .thank-you-content h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Thank You Section -->
+    <section class="thank-you-section">
+        <div class="container">
+            <div class="thank-you-grid">
+                <div class="thank-you-media">
+                    <img src="firefighter-with-dog.png" alt="Firefighter saying goodbye with dog">
+                </div>
+                <div class="thank-you-content">
+                    <h1>Payment Complete</h1>
+                    <p class="subtitle">
+                        Our team will contact you soon to start your documents.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="border: none;">
+        <div class="container">
+            <div style="text-align: center;">
+                <h3 style="color: white; margin-bottom: 15px;">Edgewater Insurance Solutions</h3>
+                <p>Protecting those who serve.</p>
+            </div>
+
+            <div class="footer-content">
+                <p>&copy; 2026 Edgewater Insurance Solutions LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

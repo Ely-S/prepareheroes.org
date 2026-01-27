@@ -7,6 +7,50 @@ const COPPER_API_URL = 'https://api.copper.com/developer_api/v1';
 const ESTATE_PLANNING_PIPELINE_ID = 1130648;
 const PAID_STAGE_ID = 5076181;
 const COMPLETED_QUIZ_STAGE_ID = 5076179;
+const FIELD_IDS = {
+  phone: 722611,
+  responderStatus: 722612,
+  dswNumber: 722613,
+  department: 722614,
+  maritalStatus: 722615,
+  dependants: 722616,
+  realEstate: 722617,
+  lifeInsurance: 722618,
+  existingTrust: 722619,
+  selectedPackage: 722620,
+  referredBy: 723226
+};
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function getDetailsValue(details: string | undefined, label: string) {
+  if (!details) return '';
+  const regex = new RegExp(`^${escapeRegExp(label)}:\\s*(.+)$`, 'm');
+  const match = details.match(regex);
+  return match ? match[1].trim() : '';
+}
+
+function upsertDetailsLines(details: string, updates: Record<string, string | undefined>) {
+  let output = details || '';
+  Object.entries(updates).forEach(([label, value]) => {
+    if (value === undefined) return;
+    const line = `${label}: ${value}`;
+    const regex = new RegExp(`^${escapeRegExp(label)}:.*$`, 'm');
+    if (regex.test(output)) {
+      output = output.replace(regex, line);
+    } else {
+      output = output ? `${output}\n${line}` : line;
+    }
+  });
+  return output;
+}
+
+function getCustomFieldValue(customFields, fieldId) {
+  const entry = (customFields || []).find((field) => field.custom_field_definition_id === fieldId);
+  return entry?.value;
+}
 
 /**
  * Helper to get Copper API Headers
@@ -64,6 +108,101 @@ export async function findPersonByPhone(phone, env) {
   
   const data = await response.json();
   return data.length > 0 ? data[0] : null;
+}
+
+/**
+ * Get a person by ID
+ */
+export async function getPersonById(personId, env) {
+  const url = `${COPPER_API_URL}/people/${personId}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getCopperHeaders(env)
+  });
+
+  if (!response.ok) {
+    console.error('Error fetching person:', await response.text());
+    return null;
+  }
+
+  return await response.json();
+}
+
+/**
+ * Get an opportunity by ID
+ */
+export async function getOpportunityById(opportunityId, env) {
+  const url = `${COPPER_API_URL}/opportunities/${opportunityId}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: getCopperHeaders(env)
+  });
+
+  if (!response.ok) {
+    console.error('Error fetching opportunity:', await response.text());
+    return null;
+  }
+
+  return await response.json();
+}
+
+/**
+ * Extract checkout-relevant data from an opportunity
+ */
+export function getOpportunityCheckoutData(opportunity) {
+  const selectedPackage = getCustomFieldValue(opportunity?.custom_fields, FIELD_IDS.selectedPackage);
+  const responderStatus = getCustomFieldValue(opportunity?.custom_fields, FIELD_IDS.responderStatus);
+  const customerType = responderStatus === 'civilian' ? 'civilian' : 'responder';
+  const email = getDetailsValue(opportunity?.details, 'Email');
+
+  return {
+    selectedPackage,
+    customerType,
+    email,
+    primaryContactId: opportunity?.primary_contact_id || null
+  };
+}
+
+/**
+ * Update checkout link/state in the opportunity details
+ */
+export async function upsertCheckoutDetails(
+  opportunityId,
+  env,
+  { checkoutLink, checkoutState }: { checkoutLink?: string; checkoutState?: string }
+) {
+  const opportunity = await getOpportunityById(opportunityId, env);
+  if (!opportunity) {
+    throw new Error(`Opportunity not found: ${opportunityId}`);
+  }
+
+  const existingDetails = opportunity?.details || '';
+  const updatedDetails = upsertDetailsLines(existingDetails, {
+    'Checkout Link': checkoutLink,
+    'Checkout State': checkoutState
+  });
+
+  if (updatedDetails === existingDetails) {
+    return opportunity;
+  }
+
+  const response = await fetch(`${COPPER_API_URL}/opportunities/${opportunityId}`, {
+    method: 'PUT',
+    headers: getCopperHeaders(env),
+    body: JSON.stringify({ details: updatedDetails })
+  });
+
+  if (!response.ok) {
+    const txt = await response.text();
+    console.error(`[Copper API] Failed to update checkout details ${opportunityId}: ${txt}`);
+    throw new Error(`Copper update failed: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+export function isOpportunityPaid(opportunity) {
+  return opportunity?.pipeline_stage_id === PAID_STAGE_ID;
 }
 
 /**
@@ -187,6 +326,9 @@ export async function markOpportunityPaid(opportunityId, env, paymentInfo = {}) 
       ? `${existingDetails}\n\n${paymentBlock}`
       : paymentBlock;
   }
+  updatedDetails = upsertDetailsLines(updatedDetails, {
+    'Checkout State': 'Paid'
+  });
 
   const payload: { pipeline_stage_id: number; details?: string } = {
     pipeline_stage_id: PAID_STAGE_ID
@@ -241,21 +383,6 @@ export async function createCopperOpportunity(formData, personId, env) {
   };
 
   const assigneeId = formData.referredBy ? representativeMapping[formData.referredBy] : null;
-
-  // Custom field IDs (created for Estate Planning opportunities)
-  const FIELD_IDS = {
-    phone: 722611,
-    responderStatus: 722612,
-    dswNumber: 722613,
-    department: 722614,
-    maritalStatus: 722615,
-    dependants: 722616,
-    realEstate: 722617,
-    lifeInsurance: 722618,
-    existingTrust: 722619,
-    selectedPackage: 722620,
-    referredBy: 723226
-  };
 
   // Build custom fields array with all form data
   const customFields = [

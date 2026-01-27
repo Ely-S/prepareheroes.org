@@ -7,7 +7,7 @@ const COPPER_API_URL = 'https://api.copper.com/developer_api/v1';
 const ESTATE_PLANNING_PIPELINE_ID = 1130648;
 const PAID_STAGE_ID = 5076181;
 const COMPLETED_QUIZ_STAGE_ID = 5076179;
-const FIELD_IDS = {
+export const FIELD_IDS = {
   phone: 722611,
   responderStatus: 722612,
   dswNumber: 722613,

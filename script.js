@@ -581,15 +581,16 @@ async function selectPackage(packageType) {
             sessionStorage.setItem('opportunityId', String(result.opportunityId));
         }
 
-        // We don't route to payment from the questionnaire flow.
-        // After saving the final choice, send them to the thank-you page.
-        const thankYouUrl = new URL(REDIRECT_URL, window.location.origin);
-        thankYouUrl.searchParams.set('chosenPackage', packageType);
-        thankYouUrl.searchParams.set('customerType', customerType);
+        // Redirect to the server-provided checkout link when available.
+        // Fallback to the local checkout page if the API didn't return one.
+        const redirectTarget = result?.checkoutLink || REDIRECT_URL;
+        const redirectUrl = new URL(redirectTarget, window.location.origin);
+        redirectUrl.searchParams.set('chosenPackage', packageType);
+        redirectUrl.searchParams.set('customerType', customerType);
         if (userData.email) {
-            thankYouUrl.searchParams.set('email', userData.email);
+            redirectUrl.searchParams.set('email', userData.email);
         }
-        window.location.href = `${thankYouUrl.pathname}${thankYouUrl.search}`;
+        window.location.href = redirectUrl.toString();
     } catch (error) {
         console.error('Error saving selection:', error);
         alert('There was an error saving your selection. Please try again.');

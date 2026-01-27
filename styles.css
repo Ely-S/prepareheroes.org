@@ -751,6 +751,15 @@ footer a:hover {
         max-height: calc(100vh - 20px);
     }
     .form-row { grid-template-columns: 1fr; }
+    .cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .package-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
 }
 
 @media (max-width: 640px) {

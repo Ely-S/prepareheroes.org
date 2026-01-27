@@ -7,6 +7,39 @@ const COPPER_API_URL = 'https://api.copper.com/developer_api/v1';
 const ESTATE_PLANNING_PIPELINE_ID = 1130648;
 const PAID_STAGE_ID = 5076181;
 const COMPLETED_QUIZ_STAGE_ID = 5076179;
+const FIELD_IDS = {
+  phone: 722611,
+  responderStatus: 722612,
+  dswNumber: 722613,
+  department: 722614,
+  maritalStatus: 722615,
+  dependants: 722616,
+  realEstate: 722617,
+  lifeInsurance: 722618,
+  existingTrust: 722619,
+  selectedPackage: 722620,
+  referredBy: 723226,
+  paymentLink: 36791091
+};
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function upsertDetailsLines(details: string, updates: Record<string, string | undefined>) {
+  let output = details || '';
+  Object.entries(updates).forEach(([label, value]) => {
+    if (value === undefined) return;
+    const line = `${label}: ${value}`;
+    const regex = new RegExp(`^${escapeRegExp(label)}:.*$`, 'm');
+    if (regex.test(output)) {
+      output = output.replace(regex, line);
+    } else {
+      output = output ? `${output}\n${line}` : line;
+    }
+  });
+  return output;
+}
 
 /**
  * Helper to get Copper API Headers
@@ -143,6 +176,59 @@ export async function findOpenOpportunityForPerson(personId, env) {
 }
 
 /**
+ * Update checkout link/state in the opportunity details and custom field
+ */
+export async function upsertCheckoutDetails(opportunityId, env, { checkoutLink, checkoutState }: { checkoutLink?: string; checkoutState?: string }) {
+  const url = `${COPPER_API_URL}/opportunities/${opportunityId}`;
+  let existingDetails = '';
+
+  try {
+    const existingResponse = await fetch(url, {
+      method: 'GET',
+      headers: getCopperHeaders(env)
+    });
+    if (existingResponse.ok) {
+      const existing = await existingResponse.json();
+      existingDetails = existing?.details || '';
+    }
+  } catch (error) {
+    console.warn(`[Copper API] Failed to fetch existing opportunity ${opportunityId}:`, error);
+  }
+
+  const updatedDetails = upsertDetailsLines(existingDetails, {
+    'Checkout Link': checkoutLink,
+    'Checkout State': checkoutState
+  });
+
+  const payload: { details: string; custom_fields?: { custom_field_definition_id: number; value: any }[] } = {
+    details: updatedDetails
+  };
+
+  if (checkoutLink) {
+    payload.custom_fields = [
+      {
+        custom_field_definition_id: FIELD_IDS.paymentLink,
+        value: checkoutLink
+      }
+    ];
+  }
+
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers: getCopperHeaders(env),
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    const txt = await response.text();
+    console.error(`[Copper API] Failed to update checkout details ${opportunityId}: ${txt}`);
+    throw new Error(`Copper update failed: ${response.status}`);
+  }
+
+  return await response.json();
+}
+
+/**
  * Mark Opportunity as Paid
  */
 export async function markOpportunityPaid(opportunityId, env, paymentInfo = {}) {
@@ -187,6 +273,9 @@ export async function markOpportunityPaid(opportunityId, env, paymentInfo = {}) 
       ? `${existingDetails}\n\n${paymentBlock}`
       : paymentBlock;
   }
+  updatedDetails = upsertDetailsLines(updatedDetails, {
+    'Checkout State': 'Paid'
+  });
 
   const payload: { pipeline_stage_id: number; details?: string } = {
     pipeline_stage_id: PAID_STAGE_ID
@@ -241,21 +330,6 @@ export async function createCopperOpportunity(formData, personId, env) {
   };
 
   const assigneeId = formData.referredBy ? representativeMapping[formData.referredBy] : null;
-
-  // Custom field IDs (created for Estate Planning opportunities)
-  const FIELD_IDS = {
-    phone: 722611,
-    responderStatus: 722612,
-    dswNumber: 722613,
-    department: 722614,
-    maritalStatus: 722615,
-    dependants: 722616,
-    realEstate: 722617,
-    lifeInsurance: 722618,
-    existingTrust: 722619,
-    selectedPackage: 722620,
-    referredBy: 723226
-  };
 
   // Build custom fields array with all form data
   const customFields = [

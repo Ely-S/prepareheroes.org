@@ -4,19 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SF First Responders Estate Planning | Edgewater Insurance Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-
-    <!-- Navigation -->
-    <header>
-        <div class="container nav-container">
-            <div class="logo">
-                <img src="/LOGO.jpg" alt="Edgewater Insurance Solutions Logo" style="height: 90px; width: auto; vertical-align: middle;">
-            </div>
-            <button onclick="openQuestionnaire('will')" class="btn btn-primary">Get Started</button>
-        </div>
-    </header>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -44,6 +37,7 @@
     <!-- Value Proposition -->
     <section class="section-padding offer" id="offer">
         <div class="container">
+            <div class="eyebrow">Our Commitment</div>
             <h2>You Serve Us, Let Us Serve You.</h2>
             
             <div class="comparison-chart">
@@ -75,6 +69,7 @@
     <section class="section-padding packages" id="packages">
         <div class="container">
             <div style="text-align: center; margin-bottom: 30px;">
+                <div class="eyebrow">Estate Planning Packages</div>
                 <h2>Select Your Package</h2>
             </div>
 
@@ -124,7 +119,7 @@
 
                 <!-- Trust (Couples) -->
                 <div class="package-card featured">
-                    <div class="card-badge">Best Value</div>
+                    <div class="card-badge">Best for Couples</div>
                     <h3>Trust (Couples)</h3>
                     <div class="price-container">
                          <div class="base-price strike" id="base-trust-couple"></div>
@@ -215,8 +210,9 @@
     <!-- How It Works -->
     <section class="section-padding steps" id="how-it-works">
         <div class="container">
-            <h2 style="text-align: center;">How It Works</h2>
-            <p style="text-align: center; color: #cbd5e1;">We help you every step of the way.</p>
+            <div class="eyebrow" style="display:block; text-align:center;">The Process</div>
+            <h2 style="text-align: center; color: var(--white);">How It Works</h2>
+            <p style="text-align: center; color: rgba(255,255,255,0.65);">We help you every step of the way.</p>
             
             <div class="steps-grid">
                 <div class="step-card">
@@ -234,20 +230,6 @@
                     <h3>Download & Sign</h3>
                     <p>Print your documents and notarize following our guide.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Us -->
-    <section class="section-padding about" id="about">
-        <div class="container about-content">
-            <h2>About Us</h2>
-            <p style="margin: 20px 0;">
-                We are <strong>Edgewater Insurance Solutions</strong>. We pride ourselves in providing the best coverage to First Responders, having proudly served the community for over 17 years.
-            </p>
-            
-            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px;">
-                
             </div>
         </div>
     </section>
@@ -307,14 +289,24 @@
         </div>
     </section>
 
+    <!-- About Us -->
+    <section class="section-padding about" id="about">
+        <div class="container about-content">
+            <div class="eyebrow">Who We Are</div>
+            <h2>About Us</h2>
+            <p style="margin: 20px 0;">
+                We are <strong>Edgewater Insurance Solutions</strong>. We pride ourselves in providing the best coverage to First Responders, having proudly served the community for over 17 years.
+            </p>
+
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px;">
+
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div style="text-align: center;">
-                <h3 style="color: white; margin-bottom: 15px;">Edgewater Insurance Solutions</h3>
-                <p>Protecting those who serve.</p>
-            </div>
-
             <div class="footer-content">
                 <p><a href="#">Contact Support</a> | <a href="/privacy-policy.html">Privacy Policy</a> | <a href="/terms-of-service.html">Terms &amp; Conditions</a></p>
                 <p style="max-width: 600px; font-size: 0.8rem; opacity: 0.7;">

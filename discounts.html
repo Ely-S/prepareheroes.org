@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Discounts | Edgewater Advisor DSA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        :root {
+            --navy: #0a1f44;
+            --deep-blue: #1a3a5c;
+            --bronze: #c9965b;
+            --warm-gold: #e5c78f;
+            --ice: #f4f7fb;
+            --steel: #8a99ae;
+            --white: #ffffff;
+            --shadow: rgba(10, 31, 68, 0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: linear-gradient(135deg, var(--ice) 0%, #e8edf5 100%); color: var(--navy); line-height: 1.6; }
+        .header { background: var(--navy); color: var(--white); padding: 1.5rem 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 1rem; font-family: 'Crimson Pro', serif; font-size: 1.5rem; font-weight: 700; }
+        .nav { display: flex; gap: 2rem; }
+        .nav a { color: var(--white); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav a:hover { color: var(--warm-gold); }
+
+        .main-wrap { max-width: 1200px; margin: 0 auto; padding: 2rem; display: flex; gap: 2rem; align-items: flex-start; }
+        .sidebar { width: 260px; flex-shrink: 0; }
+        .content-area { flex: 1; }
+
+        .blueContent { background: linear-gradient(135deg, var(--deep-blue) 0%, var(--navy) 100%); color: var(--white); padding: 2rem; border-radius: 16px; margin-bottom: 1.5rem; box-shadow: 0 8px 25px var(--shadow); }
+
+        /* Sidebar nav layout */
+        .iconRow { display: flex; flex-direction: column; gap: 0.25rem; align-items: stretch; }
+        .iconLink { color: var(--white); text-decoration: none; text-align: left; transition: background 0.2s ease, transform 0.2s ease; border-radius: 10px; }
+        .iconLink:hover { color: var(--warm-gold); background: rgba(255, 255, 255, 0.06); transform: translateX(4px); }
+        .iconContent { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; min-width: 0; font-size: 0.95rem; }
+        .iconContent br { display: none; }
+        .iconImg { display: none; }
+
+        .iconSelect-mobile { display: none; margin-top: 1rem; }
+        .iconSelect-mobile select { width: 100%; padding: 0.75rem; font-size: 1rem; border-radius: 8px; border: 2px solid var(--bronze); background: var(--white); color: var(--navy); }
+
+        @media (max-width: 768px) {
+            .main-wrap { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .iconRow { display: none; }
+            .iconSelect-mobile { display: block; }
+            .content-area > div[style*="text-align:center;"] { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        }
+        .powered { text-align: center; padding: 1.5rem; font-size: 0.9rem; color: var(--steel); }
+        .powered a { color: var(--deep-blue); }
+        .perkBanners { text-align: center; margin: 1rem 0; }
+        .perkBanners img { max-width: 100%; height: auto; border-radius: 8px; }
+        .category { font-family: 'Crimson Pro', serif; font-size: 1.5rem; font-weight: 700; color: var(--navy); margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 3px solid var(--bronze); }
+        .logoside {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin: 0;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: transform 0.2s ease;
+            text-align: center;
+            box-sizing: border-box;
+            height: 100%;
+        }
+        .logoside:hover { transform: translateY(-4px); box-shadow: 0 8px 25px var(--shadow); }
+        .logoside a { text-decoration: none; color: inherit; }
+        .content-area > div[style*="text-align:center;"] {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.5rem;
+            justify-items: stretch;
+            align-items: stretch;
+            text-align: left;
+        }
+        .content-area > div[style*="text-align:center;"] a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .content-area > div[style*="text-align:center;"] a:hover {
+            text-decoration: none;
+        }
+        .prg_img { max-width: 100%; height: auto; max-height: 200px; object-fit: contain; margin-bottom: 0.75rem; }
+        .prgTitle { 
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--deep-blue);
+            line-height: 1.3;
+            text-align: left;
+        }
+        #alignBottom { margin-top: auto; }
+        .topLink { display: inline-block; margin-top: 1rem; color: var(--bronze); font-weight: 600; text-decoration: none; }
+        .topLink:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <a name="top"></a>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="dsa-portal.html" style="color: inherit; text-decoration: none;">Edgewater Advisor <em style="font-style: italic; font-weight: 400; color: var(--bronze);">DSA</em></a>
+            </div>
+            <nav class="nav">
+                <a href="dsa-portal.html">Portal</a>
+                <a href="discounts.html" style="color: var(--warm-gold);">Discounts</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-wrap">
+        <aside class="sidebar">
+            <div class="blueContent iconSelect">
+                <div class="iconRow">
+                <a href="#Tickets_&_Attractions" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/tickets_and_entertainment.svg" class="iconImg" title="Tickets & Attractions" alt="Tickets & Attractions">
+                        Tickets & Attractions
+                    </div>
+                </a>
+                <a href="#Travel" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/travel.svg" class="iconImg" title="Travel" alt="Travel">
+                        Travel
+                    </div>
+                </a>
+                <a href="#National_Retailers" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/national_retail.svg" class="iconImg" title="National Retailers" alt="National Retailers">
+                        National Retailers
+                    </div>
+                </a>
+                <a href="#Local_Discounts" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/local_retail.svg" class="iconImg" title="Local Discounts" alt="Local Discounts">
+                        Shop Local
+                    </div>
+                </a>
+                <a href="#Flowers_&_Gifts" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/flowers_and_gifts.svg" class="iconImg" title="Flowers & Gifts" alt="Flowers & Gifts">
+                        Flowers & Gifts
+                    </div>
+                </a>
+                <a href="#Pets" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/pets.svg" class="iconImg" title="Pets" alt="Pets">
+                        Pets
+                    </div>
+                </a>
+                <a href="#Food_&_Grocery" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/food_and_grocery.svg" class="iconImg" title="Food & Grocery" alt="Food & Grocery">
+                        Food & Grocery
+                    </div>
+                </a>
+                <a href="#Electronics_&_Office" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/electronics_and_computers.svg" class="iconImg" title="Electronics & Office" alt="Electronics & Office">
+                        Electronics & Office
+                    </div>
+                </a>
+                <a href="#Automotive" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/automobile.svg" class="iconImg" title="Automotive" alt="Automotive">
+                        Automotive
+                    </div>
+                </a>
+                <a href="#Professional_Services" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/professional_services.svg" class="iconImg" title="Professional Services" alt="Professional Services">
+                        Professional Services
+                    </div>
+                </a>
+                <a href="#Health_&_Wellness" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/health_and_wellness.svg" class="iconImg" title="Health & Wellness" alt="Health & Wellness">
+                        Health & Wellness
+                    </div>
+                </a>
+                <a href="#Senior_Living" class="iconLink">
+                    <div class="iconContent">
+                        <img src="https://www.perkplans.com/assets/images/icons/senior_living.svg" class="iconImg" title="Senior Living" alt="Senior Living">
+                        <span>Senior Living</span>
+                    </div>
+                </a>
+                </div>
+            </div>
+            <div class="blueContent iconSelect-mobile">
+                <select name="category" id="category" onchange="goToCat()">
+                    <option value="">Select a Category</option>
+                    <option value="Tickets_&_Attractions">Tickets & Attractions</option>
+                    <option value="Travel">Travel</option>
+                    <option value="National_Retailers">National Retailers</option>
+                    <option value="Local_Discounts">Local Discounts</option>
+                    <option value="Flowers_&_Gifts">Flowers & Gifts</option>
+                    <option value="Pets">Pets</option>
+                    <option value="Food_&_Grocery">Food & Grocery</option>
+                    <option value="Electronics_&_Office">Electronics & Office</option>
+                    <option value="Automotive">Automotive</option>
+                    <option value="Professional_Services">Professional Services</option>
+                    <option value="Health_&_Wellness">Health & Wellness</option>
+                    <option value="Senior_Living">Senior Living</option>
+                </select>
+            </div>
+        </aside>
+
+        <div class="content-area">
+    
+        <div class="category"><a name="Tickets_&_Attractions"></a>Tickets & Attractions</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/SportsTickets/3215/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans-allsports.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save on All Sporting<br />Events Nationwide</div></div></a>
+            <a href="https://www.perkplans.com/program/NFLTickets/3208/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans-NFL.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save On All Your Sporting<br />Event Tickets</div></div></a>
+            <a href="https://www.perkplans.com/program/NBATickets/3209/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans-NBA.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save On All Your Sporting<br />Event Tickets</div></div></a>
+            <a href="https://www.perkplans.com/program/MLBTickets/3210/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans-MLB(002).jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save On All Your Sporting<br />Event Tickets</div></div></a>
+            <a href="https://www.perkplans.com/program/NHLTickets/3211/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans-NHL.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save On All Your Sporting<br />Event Tickets</div></div></a>
+            <a href="https://www.perkplans.com/program/SoccerTickets/3212/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans300X250MLS.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save On All Your Sporting<br />Event Tickets</div></div></a>
+            <a href="https://www.perkplans.com/program/ConcertTickets/3213/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans-Concerts.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">See your favorite concert<br />Artist Live + In-Person</div></div></a>
+            <a href="https://www.perkplans.com/program/TheaterTickets/3214/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PSUSA-Perkplans-THEATER.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save on Theatre Tickets<br />Nationwide</div></div></a>
+            <a href="https://www.perkplans.com/program/MovieTickets/3217/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/aCCESSMovieTickets_banners_op2_v3_Email_300x288.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save Up To 30% From<br />Your Favorite Theatres</div></div></a>
+        </div>
+
+        <div class="category"><a name="Travel"></a>Travel</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/LDiscountHotels/3188/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/LaasyBellagio.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Cash Back And Save More<br />On Every Next Hotel Stay</div></div></a>
+            <a href="https://www.perkplans.com/program/LTravelVIP/3375/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/DisTravelMar.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Receive Cash Back & Save<br />Hotels-Flights-Car Rental</div></div></a>
+            <a href="https://www.perkplans.com/program/LDiscountFlights/3371/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Laasyflights5.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Travel Far, Save Big<br />With PerkPlans Flights</div></div></a>
+            <a href="https://www.perkplans.com/program/LCarRentals/3372/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/LCarrent.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Rent - Save And Get<br />Cash Back</div></div></a>
+            <a href="https://www.perkplans.com/program/LCorporateGroupTravel/3370/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/LaasyGroup1.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save With Our<br />Concierge Service</div></div></a>
+            <a href="https://www.perkplans.com/program/HeroesVacationClub/3297/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/hvc-ad-set-2-standard-display-hero-300x250-static(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Use Free Promo Code HVC60<br />Pick-Hero Benefit Network</div></div></a>
+            <a href="https://www.perkplans.com/program/WaltDisneyWorld/1172/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/AccessWDW.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Travel Marketplace<br />Save Up To $60 on Tickets</div></div></a>
+            <a href="https://www.perkplans.com/program/UniversalOrlandoResort/1173/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/AccessUniversal.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Travel Marketplace<br />Save Up to 10% on Tickets</div></div></a>
+            <a href="https://www.perkplans.com/program/Disneyland/2173/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/AccessDisneyland.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Travel Marketplace<br />Save Up To $25</div></div></a>
+            <a href="https://www.perkplans.com/program/BuschGardens/1174/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/AccessBuschGarden.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Travel Marketplace<br />Up To 25% Single Day</div></div></a>
+            <a href="https://www.perkplans.com/program/SesamePlace/1175/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/AccesssesamePlace.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Travel Marketplace<br />Up To 25% Single Day</div></div></a>
+            <a href="https://www.perkplans.com/program/Boatsetter/129/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/BoatRental.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Use Code PERKPLANS For<br />An 8% Discount</div></div></a>
+            <a href="https://www.perkplans.com/program/SkyKey/3379/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/SkyKey2.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save On Booked Flights<br />Only Pay If You Save</div></div></a>
+        </div>
+
+        <div class="category"><a name="National_Retailers"></a>National Retailers</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/CashBackNationalRetailers/3373/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Laasy14.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Earn Cash Back From<br />Your Favorite Retailers</div></div></a>
+            <a href="https://www.perkplans.com/program/SamsClub/46/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Sam'sClub21.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Join Now And Receive<br />$40 off a Plus Membership</div></div></a>
+            <a href="https://www.perkplans.com/program/SamsClubRetail/3358/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/SamsClub2025.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Shop all products and<br />Services at Sam's Club</div></div></a>
+            <a href="https://www.perkplans.com/program/Costco/136/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Costco1.jPEG" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Enter Code CJPROMO<br />At Checkout</div></div></a>
+            <a href="https://www.perkplans.com/program/Fanatics/3175/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Fanatics.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save with Fanatics<br />With Premier Access</div></div></a>
+            <a href="https://www.perkplans.com/program/NBAStore/3176/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/NBAStore.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save at the NBA Store<br />With Premier Access</div></div></a>
+            <a href="https://www.perkplans.com/program/NFLShops/3177/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/NFLShops.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save at NFL Shops<br />With Premier Access</div></div></a>
+            <a href="https://www.perkplans.com/program/MLBShops/3178/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/MLB.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save On All Your MLB<br />Gear With Premier Access</div></div></a>
+            <a href="https://www.perkplans.com/program/NHLShops/3179/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/NFLShops.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save at NHL Shops<br />With Premier Savings</div></div></a>
+            <a href="https://www.perkplans.com/program/MLSStore/3180/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/MLS.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save with the MLS Store<br />With Premier Access</div></div></a>
+            <a href="https://www.perkplans.com/program/Lids/3181/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Lids300.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save with Lids with<br />With Premier Access</div></div></a>
+            <a href="https://www.perkplans.com/program/Amazon/82/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Amazon250x250.gif" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Shop - Connect - Enjoy<br /></div></div></a>
+        </div>
+
+        <div class="category"><a name="Local_Discounts"></a>Local Discounts</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/Restaurantcom/16/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Restaurant.com300x250.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save $$$ Nationwide At<br />Your Favorite Restaurants</div></div></a>
+            <a href="https://www.perkplans.com/program/Clipp/7/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Clipp.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Local Discounts<br />Save up to 50%</div></div></a>
+            <a href="https://www.perkplans.com/program/ShopLocal/3174/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/AcccessMCID-ProgramLaunch_Banner-Ads_S2_300x250(002).jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save $$$<br />Shop Local Nationwide</div></div></a>
+        </div>
+
+        <div class="category"><a name="Flowers_&_Gifts"></a>Flowers & Gifts</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/DebsDelights/17/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Debsdelights21.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">10% On First Order<br />Ships Nationally</div></div></a>
+            <a href="https://www.perkplans.com/program/IceShaker/139/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/ICESHAKER_EBC_AMAZON_SKINNYSHAKERBOTTLE-04.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">The Perfect Bottle<br />Shop Today's Savings</div></div></a>
+            <a href="https://www.perkplans.com/program/AeroGarden/140/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Aerogarden13888238.jpeg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Shop For Today's Deals<br /></div></div></a>
+            <a href="https://www.perkplans.com/program/GiftAMagazine/1161/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/360Media-300x250.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Receive A Free Magazine<br />Gift On Us!!!</div></div></a>
+            <a href="https://www.perkplans.com/program/Flowers/3246/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Flowers3.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save $$$ On Flowers From<br />national & Local Shops</div></div></a>
+        </div>
+
+        <div class="category"><a name="Pets"></a>Pets</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/LibertyMutualPetInsurance/3187/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/LibertyPet_Banner_300x250.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Use Promo Code Perkplans<br />For Your Discount</div></div></a>
+            <a href="https://www.perkplans.com/program/MyPrimaryPetCare/3351/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/mppc-tile(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save 15% to 60% With Our<br />Prescription Plan</div></div></a>
+            <a href="https://www.perkplans.com/program/TheFarmersDog/3232/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/FarmersDog300x250(4).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Smarter, Healthier Pet<br />Food at 60% Off</div></div></a>
+            <a href="https://www.perkplans.com/program/SpotPetInsurance/3309/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Spot300x250(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Visit Any Vet<br />No Network</div></div></a>
+            <a href="https://www.perkplans.com/program/FreedomRXPet/3367/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/RXcardpet.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">No-Cost Pet Prescription<br />Discount Card</div></div></a>
+        </div>
+
+        <div class="category"><a name="Food_&_Grocery"></a>Food & Grocery</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/ChicagoSteakCompany/32/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/ChicagoDit.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Free Shipping + 3 Gifts<br /></div></div></a>
+            <a href="https://www.perkplans.com/program/Factor/3218/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/FactorMeals300x250.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Enjoy a total of $130 off<br />Code: PERKPLANS5010</div></div></a>
+            <a href="https://www.perkplans.com/program/Nutrisystems/3231/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Nutrisystems300x250(3)(1).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Check Out Our Specials<br />Deals For Members</div></div></a>
+        </div>
+
+        <div class="category"><a name="Electronics_&_Office"></a>Electronics & Office</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/PerchMobile/3374/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/PerchTiles(300x250px)QualityService(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Use Code Perk48<br />20% Off First Month</div></div></a>
+            <a href="https://www.perkplans.com/program/VerizonWireless/88/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Verizonwireless7-266.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Check Today's Special<br />Promotions!!!</div></div></a>
+            <a href="https://www.perkplans.com/program/VerizonForFirstResponders/3338/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Verizon2024.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">First Responders Save at<br />Verizon</div></div></a>
+            <a href="https://www.perkplans.com/program/AKKO/3270/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Akkogood300x250(6)(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">First Month Free With<br />Code - PERKPLANS1</div></div></a>
+            <a href="https://www.perkplans.com/program/VerizonForMilitaryandVeterans/3339/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Verizon2024.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save More With Verizon<br />Military and Veterans</div></div></a>
+            <a href="https://www.perkplans.com/program/DellTechnology/29/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/DellTechStacked-Blue(1).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save Up To 50% With<br />Dell Technology</div></div></a>
+            <a href="https://www.perkplans.com/program/MicrosoftOffice/3290/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Microsoft300x250(6).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Purchase for $39.99<br />Save 81%</div></div></a>
+            <a href="https://www.perkplans.com/program/Lenovo/146/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/lenovoWeWork-300x250(002).jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Up To 70% Off On<br />Select Products</div></div></a>
+            <a href="https://www.perkplans.com/program/GoDaddy/33/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/GoDaddy21.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save $$$ with Go Daddy!!!<br /></div></div></a>
+            <a href="https://www.perkplans.com/program/ConstantContact/13/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/constantcontact21.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Market Online<br />Email, Events and More.</div></div></a>
+        </div>
+
+        <div class="category"><a name="Automotive"></a>Automotive</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/TrueCar/87/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/TC350x250_v1(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save $$$ on New & Used<br />Cars Up To $2000</div></div></a>
+            <a href="https://www.perkplans.com/program/EnduranceAutoProtection/3306/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/EnduranceKatie_Press_release_version-001-1024x683.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save Thousands On<br />Auto Repairs</div></div></a>
+            <a href="https://www.perkplans.com/program/myAutoLoan/8/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Auto21.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Up To 4 Loan Offers<br />In Minutes</div></div></a>
+        </div>
+
+        <div class="category"><a name="Professional_Services"></a>Professional Services</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/LegalClub/3201/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/lc-perks-300x2502.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Meaningful Benefits For<br />Everyday Life</div></div></a>
+            <a href="https://www.perkplans.com/program/UberForBusiness/1166/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Uber_300x250_vF(002).jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Sign Up For Your Free<br />Account Today</div></div></a>
+            <a href="https://www.perkplans.com/program/AdvancedCyberSecurityCorp/3271/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/ACSPerk-Banner(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Cyber Extortion<br />Our plan stops them</div></div></a>
+        </div>
+
+        <div class="category"><a name="Health_&_Wellness"></a>Health & Wellness</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/HorizonFitness/143/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/HorizonZ-IC7-9-Lifestyle-300x250(002).jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Use Code PERKPLANS For A<br />6% Discount</div></div></a>
+            <a href="https://www.perkplans.com/program/SpaWeek/3220/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/SpaWM_CSTile_300.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">17% Off All Access Pass<br />To 9000+ Spas</div></div></a>
+            <a href="https://www.perkplans.com/program/LAFitness/3311/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/LAFitness21.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Set Up A call With Eliot<br />Feldman For Pricing</div></div></a>
+            <a href="https://www.perkplans.com/program/JoyaHealth/3352/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Joya350x250.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Preventative Skin Health<br />& Wellness Benefit</div></div></a>
+            <a href="https://www.perkplans.com/program/JoyOrganics/112/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/JoyOrgSpring_AffilateAds_300x250-1.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Receive Up To 30% Off<br /></div></div></a>
+            <a href="https://www.perkplans.com/program/GlassesUSA/144/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/GlASSES63(002).jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Use code: PERKP55<br />55% Off On Select Product</div></div></a>
+            <a href="https://www.perkplans.com/program/AlternativeMedicine/3203/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/MBW1300x250_MBW(002).jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Chiropractic - Message<br />Acupuncture & More</div></div></a>
+            <a href="https://www.perkplans.com/program/NeuroMD/3245/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Neuro300x250(002).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">10 % Plus Free Shipping<br />Code - RANDYNEMEROFF</div></div></a>
+            <a href="https://www.perkplans.com/program/Apollo/3248/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/ApolloBanner_MindBody_UpgradeSleep_300x250_2x.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Receive a 10% Discount<br />Applied At Checkout</div></div></a>
+        </div>
+
+        <div class="category"><a name="Senior_Living"></a>Senior Living</div>
+        <div style="text-align:center;">
+            <a href="https://www.perkplans.com/program/ADTMedicalAlert/3229/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/ADT_Banner_2023_Medical_300x250_$1(2)(1)(1)(003).png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Free Medical Alert Device<br /></div></div></a>
+            <a href="https://www.perkplans.com/program/AffinityCellular/1167/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/affinitybanners3001.jpg" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Free Phone, Activation &<br />Free Shipping!!!</div></div></a>
+            <a href="https://www.perkplans.com/program/Peacefully/3335/2132/2143/HeroBenefitsNetwork/" target="_blank" rel="noopener noreferrer"><div class="logoside"><div style="margin:auto;"><img src="https://www.perkplans.com/assets/images/current/ads/Peacefullynew.png" border="0" class="prg_img" alt=""></div><div class="prgTitle" id="alignBottom">Save 10% Create an Estate<br />Plan In Just 30 Minutes</div></div></a>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        function goToCat() {
+            var sel = document.getElementById('category');
+            var val = sel.value;
+            if (val) window.location.hash = '#' + val;
+        }
+    </script>
+</body>
+</html>

@@ -141,8 +141,14 @@
         .hero-content p {
             font-size: 1.2rem;
             color: var(--deep-blue);
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             line-height: 1.7;
+        }
+
+        .hero-subtext {
+            font-size: 0.95rem;
+            color: var(--steel);
+            margin-bottom: 2.5rem;
         }
 
         .cta-buttons {
@@ -414,6 +420,7 @@
         .action-card .btn-primary {
             width: 100%;
             margin-bottom: 1.5rem;
+            margin-top: auto;
         }
 
         .action-features {
@@ -422,6 +429,7 @@
             gap: 0.8rem;
             justify-content: center;
             width: 100%;
+            min-height: 3.8rem;
         }
 
         .feature-tag {
@@ -441,6 +449,10 @@
             top: 0;
             width: 100%;
             height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 2rem 0;
             background-color: rgba(10, 31, 68, 0.9);
             backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease;
@@ -561,6 +573,154 @@
             font-size: 0.95rem;
         }
 
+        .modal-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-form label {
+            display: block;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .modal-form input[type="text"],
+        .modal-form input[type="email"],
+        .modal-form input[type="tel"],
+        .modal-form select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid var(--ice);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-form input:focus,
+        .modal-form select:focus {
+            outline: none;
+            border-color: var(--bronze);
+        }
+
+        .modal-form .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .modal-form .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .modal-form .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--bronze);
+            cursor: pointer;
+        }
+
+        .modal-form .checkbox-item label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .modal-form .btn-primary {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 1rem 2rem;
+        }
+
+        /* Retirement Calculator Sliders */
+        .slider-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .slider-group .slider-value {
+            color: var(--deep-blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: var(--ice);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--deep-blue) 0%, var(--navy) 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(26, 58, 92, 0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .slider-group input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .slider-group input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--deep-blue) 0%, var(--navy) 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(26, 58, 92, 0.4);
+        }
+
+        .calc-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--ice) 0%, #e8edf5 100%);
+            border-radius: 12px;
+            border-left: 4px solid var(--bronze);
+        }
+
+        .calc-result h4 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.2rem;
+            color: var(--navy);
+            margin-bottom: 0.75rem;
+        }
+
+        .calc-result p {
+            color: var(--deep-blue);
+            margin: 0.25rem 0;
+            line-height: 1.6;
+        }
+
+        .calc-result .highlight {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--bronze);
+            margin: 0.5rem 0;
+        }
+
         @media (max-width: 768px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -609,31 +769,31 @@
     <section class="hero">
         <div class="hero-content">
             <h1>
-                Financial Wellness
-                <span>Built for Those Who Serve</span>
+                Financial Planning
+                <span>and Pension Optimization</span>
             </h1>
             <p>
-                Tailored financial planning and wellness resources specifically for the Deputy Sheriffs Association.
+                Tailored financial planning, pension guidance, and wellness resources specifically for the Deputy Sheriffs Association.
             </p>
             <div class="cta-buttons">
-                <button class="btn-primary" onclick="openQuiz()">🩺 Online Financial Checkup</button>
+                <button class="btn-primary" onclick="openMeetingModal('retirement-planning')">Start a Financial Plan Now</button>
             </div>
         </div>
 
         <div class="hero-card">
             <div class="quick-access">
-                <h3>Quick Access</h3>
+                <h3>Start with a Financial Plan</h3>
                 <div class="quick-links">
-                    <a href="#" class="quick-link">
+                    <a href="#" class="quick-link" onclick="openMeetingModal('retirement-planning'); return false;">
+                        <span>Learn about Pension Optimization</span>
+                        <span>→</span>
+                    </a>
+                    <a href="#" class="quick-link" onclick="openMeetingModal('advisor'); return false;">
+                        <span>Talk to a financial advisor</span>
+                        <span>→</span>
+                    </a>
+                    <a href="#" class="quick-link" onclick="openRetirementCalculator(); return false;">
                         <span>Retirement Calculator</span>
-                        <span>→</span>
-                    </a>
-                    <a href="#" class="quick-link">
-                        <span>Benefits Overview</span>
-                        <span>→</span>
-                    </a>
-                    <a href="#" class="quick-link">
-                        <span>Financial Advisor Chat</span>
                         <span>→</span>
                     </a>
                 </div>
@@ -653,7 +813,7 @@
                     <div class="action-icon">🧮</div>
                     <h3>Retirement Calculator</h3>
                     <p>Use our specialized retirement calculator built for law enforcement. Factor in your pension, DROP options, deferred compensation, and Social Security benefits.</p>
-                    <button class="btn-primary">Calculate Now</button>
+                    <button class="btn-primary" onclick="openRetirementCalculator()">Calculate Now</button>
                     <div class="action-features">
                         <div class="feature-tag">✓ Speak to a Retirement Advisor</div>
                         <div class="feature-tag">✓ 30 Minutes for Free</div>
@@ -664,7 +824,7 @@
                     <div class="action-icon">📄</div>
                     <h3>Wills & Trusts</h3>
                     <p>Protect your family's future with comprehensive estate planning services. Get the legal documents you need to ensure your wishes are carried out.</p>
-                    <button class="btn-primary">Get a Free Will</button>
+                    <a href="https://prepareheroes.org" target="_blank" rel="noopener noreferrer" class="btn-primary">Get a Free Will</a>
                     <div class="action-features">
                         <div class="feature-tag">✓ Free Wills</div>
                         <div class="feature-tag">✓ Health Directive</div>
@@ -676,9 +836,11 @@
                     <div class="action-icon">🛡️</div>
                     <h3>Insurance</h3>
                     <p>Review life, disability, and supplemental insurance options tailored to the unique risks and needs of law enforcement personnel and their families.</p>
-                    <button class="btn-primary">Schedule Consultation</button>
+                    <button class="btn-primary" onclick="openMeetingModal('consultation')">Schedule Consultation</button>
                     <div class="action-features">
-                        <div class="feature-tag">✓ Meet with an Insurance Advisor Today</div>
+                        <div class="feature-tag">✓ Life & Accident</div>
+                        <div class="feature-tag">✓ Disability</div>
+                        <div class="feature-tag">✓ Law Enforcement Specifiments</div>
                     </div>
                 </div>
             </div>
@@ -693,7 +855,7 @@
                     <div class="action-icon">📈</div>
                     <h3>Invest with a Professional Investment Advisor</h3>
                     <p>Build wealth with personalized investment strategies. Work with advisors who understand law enforcement compensation and can optimize your portfolio.</p>
-                    <button class="btn-primary">Connect with Advisor</button>
+                    <button class="btn-primary" onclick="openMeetingModal('advisor')">Connect with Advisor</button>
                     <div class="action-features">
                         <div class="feature-tag">✓ Portfolio Review</div>
                         <div class="feature-tag">✓ Personalized Strategy</div>
@@ -717,7 +879,7 @@
                     <div class="action-icon">🎓</div>
                     <h3>Public Service Student Loan Forgiveness</h3>
                     <p>As a law enforcement officer, you may qualify for federal student loan forgiveness. Learn how to maximize your benefits and navigate the PSLF program.</p>
-                    <button class="btn-primary">Check Eligibility</button>
+                    <button class="btn-primary" onclick="openMeetingModal()">Check Eligibility</button>
                     <div class="action-features">
                         <div class="feature-tag">✓ Eligibility Assessment</div>
                         <div class="feature-tag">✓ Application Support</div>
@@ -729,10 +891,10 @@
                     <div class="action-icon">💬</div>
                     <h3>Speak to a Debt Counselor for Free</h3>
                     <p>Get professional help managing debt and creating a path to financial freedom. Our counselors understand the unique challenges of law enforcement careers.</p>
-                    <button class="btn-primary">Talk to a Counselor</button>
+                    <button class="btn-primary" onclick="openMeetingModal('counselor')">Talk to a Counselor</button>
                     <div class="action-features">
-                        <div class="feature-tag">✓ Free Consultation</div>
                         <div class="feature-tag">✓ Debt Management Plans</div>
+                        <div class="feature-tag">✓ Free Consultation</div>
                         <div class="feature-tag">✓ Confidential Support</div>
                     </div>
                 </div>
@@ -760,7 +922,7 @@
                     <div class="action-icon">✈️</div>
                     <h3>Save Up to 40% on Travel</h3>
                     <p>Access exclusive travel discounts on hotels, flights, rental cars, and vacation packages. Members-only rates on thousands of destinations worldwide.</p>
-                    <button class="btn-primary">Explore Travel Deals</button>
+                    <a href="https://travel.perkplans.com/" target="_blank" rel="noopener noreferrer" class="btn-primary">Explore Travel Deals</a>
                     <div class="action-features">
                         <div class="feature-tag">✓ Hotels & Resorts</div>
                         <div class="feature-tag">✓ Flights & Car Rentals</div>
@@ -772,7 +934,7 @@
                     <div class="action-icon">🎁</div>
                     <h3>Special Deals!</h3>
                     <p>Access exclusive discounts on everyday purchases. Save on shopping, electronics, home goods, and entertainment tickets through our member-only deals portal.</p>
-                    <button class="btn-primary">Browse All Deals</button>
+                    <a href="discounts.html" class="btn-primary">Browse All Deals</a>
                     <div class="action-features">
                         <div class="feature-tag">✓ Shopping & Retail</div>
                         <div class="feature-tag">✓ Electronics</div>
@@ -883,6 +1045,125 @@
         </div>
     </div>
 
+    <!-- Request a Personal Meeting Modal -->
+    <div id="meetingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMeetingModal()">&times;</span>
+            <h2 class="quiz-title">Request a No-Cost, Personal Meeting</h2>
+            <p class="quiz-subtitle">We'll reach out to schedule a time that works for you</p>
+            <form class="modal-form" id="meetingForm" onsubmit="submitMeetingForm(event)">
+                <div class="form-group">
+                    <label for="meetingName">Name</label>
+                    <input type="text" id="meetingName" name="name" required placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label for="meetingEmail">Email</label>
+                    <input type="email" id="meetingEmail" name="email" required placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="meetingPhone">Phone</label>
+                    <input type="tel" id="meetingPhone" name="phone" required placeholder="(555) 123-4567">
+                </div>
+                <div class="form-group">
+                    <label for="meetingTime">Time of Day</label>
+                    <select id="meetingTime" name="time" required>
+                        <option value="">Select preferred time</option>
+                        <option value="morning">Morning (8am – 12pm)</option>
+                        <option value="afternoon">Afternoon (12pm – 5pm)</option>
+                        <option value="evening">Evening (5pm – 8pm)</option>
+                        <option value="any">Any time</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>How can we help you today?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="callType" value="financial-advisor">
+                            <span>Financial Advisor</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="callType" value="debt-counselor">
+                            <span>Debt Counselor</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="callType" value="insurance-consultation">
+                            <span>Insurance Consultation</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="callType" value="retirement-planning">
+                            <span>Retirement Planning</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Retirement Calculator Modal -->
+    <div id="retirementModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRetirementCalculator()">&times;</span>
+            <h2 class="quiz-title">🧮 Retirement Calculator</h2>
+            <p class="quiz-subtitle">Estimate when you can retire based on your service and age</p>
+
+            <div class="slider-group">
+                <label>
+                    <span>Current Age</span>
+                    <span class="slider-value" id="currentAgeVal">40</span>
+                </label>
+                <input type="range" id="currentAge" min="25" max="65" value="40" oninput="updateRetirementCalc()">
+            </div>
+
+            <div class="slider-group">
+                <label>
+                    <span>Years of Service</span>
+                    <span class="slider-value" id="yearsServiceVal">15</span>
+                </label>
+                <input type="range" id="yearsService" min="0" max="40" value="15" oninput="updateRetirementCalc()">
+            </div>
+
+            <div class="slider-group">
+                <label>
+                    <span>Target Retirement Age</span>
+                    <span class="slider-value" id="targetAgeVal">55</span>
+                </label>
+                <input type="range" id="targetAge" min="50" max="70" value="55" oninput="updateRetirementCalc()">
+            </div>
+
+            <div class="slider-group">
+                <label>
+                    <span>Current Savings</span>
+                    <span class="slider-value" id="currentSavingsVal">$100,000</span>
+                </label>
+                <input type="range" id="currentSavings" min="0" max="500000" value="100000" step="5000" oninput="updateRetirementCalc()">
+            </div>
+
+            <div class="slider-group">
+                <label>
+                    <span>Assumed Growth Rate</span>
+                    <span class="slider-value" id="growthRateVal">6%</span>
+                </label>
+                <input type="range" id="growthRate" min="0" max="12" value="6" step="0.5" oninput="updateRetirementCalc()">
+            </div>
+
+            <div class="calc-result">
+                <h4>Your Retirement Outlook</h4>
+                <p><strong>Years until target retirement:</strong></p>
+                <p class="highlight" id="yearsUntil">15 years</p>
+                <p><strong>Projected savings at retirement:</strong> <span id="projectedSavings">$239,656</span></p>
+                <p><strong>Rule of 80 eligibility:</strong> At age <span id="rule80Age">65</span> (when Age + Years of Service = 80)</p>
+                <p><strong>25-year service eligibility:</strong> In <span id="yearsTo25">10</span> more years</p>
+                <p style="margin-top: 0.75rem; font-size: 0.9rem; color: var(--steel);">Speak to a Retirement Advisor for a personalized plan — 30 minutes FREE</p>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                <button class="btn-primary" onclick="openMeetingModal('retirement-planning'); closeRetirementCalculator();" style="flex: 1;">Talk to an Advisor</button>
+                <button class="btn-secondary" onclick="closeRetirementCalculator()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let quizAnswers = {};
         let currentQuestion = 1;
@@ -955,11 +1236,84 @@
         }
 
         window.onclick = function(event) {
-            const modal = document.getElementById('quizModal');
-            if (event.target === modal) {
-                closeQuiz();
-            }
+            const quizModal = document.getElementById('quizModal');
+            const meetingModal = document.getElementById('meetingModal');
+            const retirementModal = document.getElementById('retirementModal');
+            if (event.target === quizModal) closeQuiz();
+            if (event.target === meetingModal) closeMeetingModal();
+            if (event.target === retirementModal) closeRetirementCalculator();
         };
+
+        function openMeetingModal(initialType) {
+            document.getElementById('meetingModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            document.getElementById('meetingForm').reset();
+            document.querySelectorAll('input[name="callType"]').forEach(cb => cb.checked = false);
+            const map = { consultation: 'insurance-consultation', advisor: 'financial-advisor', counselor: 'debt-counselor', 'retirement-planning': 'retirement-planning' };
+            if (initialType && map[initialType]) {
+                const input = document.querySelector(`input[name="callType"][value="${map[initialType]}"]`);
+                if (input) input.checked = true;
+            }
+        }
+
+        function closeMeetingModal() {
+            document.getElementById('meetingModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openRetirementCalculator() {
+            document.getElementById('retirementModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            updateRetirementCalc();
+        }
+
+        function closeRetirementCalculator() {
+            document.getElementById('retirementModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateRetirementCalc() {
+            const currentAge = parseInt(document.getElementById('currentAge').value, 10);
+            const yearsService = parseInt(document.getElementById('yearsService').value, 10);
+            const targetAge = parseInt(document.getElementById('targetAge').value, 10);
+            const currentSavings = parseInt(document.getElementById('currentSavings').value, 10);
+            const growthRate = parseFloat(document.getElementById('growthRate').value, 10);
+
+            document.getElementById('currentAgeVal').textContent = currentAge;
+            document.getElementById('yearsServiceVal').textContent = yearsService;
+            document.getElementById('targetAgeVal').textContent = targetAge;
+            document.getElementById('currentSavingsVal').textContent = '$' + currentSavings.toLocaleString();
+            document.getElementById('growthRateVal').textContent = growthRate + '%';
+
+            const yearsUntil = Math.max(0, targetAge - currentAge);
+            const rule80Age = 80 - yearsService;
+            const yearsTo25 = Math.max(0, 25 - yearsService);
+
+            const projectedSavings = currentSavings * Math.pow(1 + growthRate / 100, yearsUntil);
+            document.getElementById('projectedSavings').textContent = '$' + Math.round(projectedSavings).toLocaleString();
+
+            document.getElementById('yearsUntil').textContent = yearsUntil + ' year' + (yearsUntil !== 1 ? 's' : '');
+            document.getElementById('rule80Age').textContent = rule80Age;
+            document.getElementById('yearsTo25').textContent = yearsTo25;
+        }
+
+        function submitMeetingForm(e) {
+            e.preventDefault();
+            const checked = Array.from(document.querySelectorAll('input[name="callType"]:checked')).map(cb => cb.value);
+            if (checked.length === 0) {
+                alert('Please select at least one type of call.');
+                return;
+            }
+            console.log('Meeting request submitted:', {
+                name: document.getElementById('meetingName').value,
+                email: document.getElementById('meetingEmail').value,
+                phone: document.getElementById('meetingPhone').value,
+                time: document.getElementById('meetingTime').value,
+                callTypes: checked
+            });
+            alert('Thank you! We\'ll be in touch soon to schedule your meeting.');
+            closeMeetingModal();
+        }
     </script>
 </body>
 </html>

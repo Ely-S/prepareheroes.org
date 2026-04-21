@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A3B5C">
+    <title>Complete Signing | Edgewater Insurance Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .thank-you-section {
+            background-color: var(--primary-color);
+            padding: 80px 0;
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+        }
+
+        .thank-you-grid {
+            display: grid;
+            gap: 24px;
+            align-items: center;
+            grid-template-columns: 1fr;
+            max-width: 760px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 60px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .thank-you-content {
+            text-align: center;
+        }
+
+        .thank-you-content h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .thank-you-content .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .purchase-card {
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .error-state {
+            display: none;
+            margin: 0 auto 18px;
+            padding: 14px 16px;
+            border: 1px solid rgba(229,62,62,.25);
+            background: rgba(229,62,62,.06);
+            color: #c53030;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            .thank-you-section {
+                padding: 32px 0;
+            }
+
+            .thank-you-grid {
+                gap: 24px;
+                padding: 28px 20px;
+            }
+
+            .thank-you-content h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="thank-you-section">
+        <div class="container">
+            <div class="thank-you-grid">
+                <div class="thank-you-content">
+                    <h1>Review & Sign</h1>
+                    <p class="subtitle" id="headerDescription">
+                        After signing, you will automatically continue to payment.
+                    </p>
+
+                    <div id="errorState" class="error-state">
+                        <strong>Missing required information.</strong>
+                        <p style="margin: 8px 0 0;">Please restart from the form so we can load your package details.</p>
+                        <div class="actions" style="justify-content: flex-start;">
+                            <a class="btn btn-secondary" href="/#packages">Back to form</a>
+                        </div>
+                    </div>
+
+                    <div class="purchase-card" id="signingCard">
+                        <script src="https://cdn.docuseal.com/js/form.js"></script>
+
+                        <docuseal-form
+                            id="docusealForm"
+                            data-with-title="false"
+                            data-src="https://docuseal.com/d/7Zc5C5NhzYNUCQ">                            
+                        </docuseal-form>
+                        <div class="actions">
+                            <button class="btn btn-secondary" id="continueButton" type="button">Continue to payment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="border: none;">
+        <div class="container">
+            <div style="text-align: center;">
+                <h3 style="color: white; margin-bottom: 15px;">Edgewater Insurance Solutions</h3>
+                <p>Protecting those who serve.</p>
+            </div>
+            <div class="footer-content">
+                <p>&copy; 2026 Edgewater Insurance Solutions LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const selectedPackage = params.get('chosenPackage');
+            const customerType = params.get('customerType');
+            const opportunityId = params.get('opportunityId') || sessionStorage.getItem('opportunityId') || '';
+            let email = params.get('email') || '';
+            let fullName = params.get('name') || '';
+            const isStandaloneSigning = !selectedPackage && !customerType && !params.get('opportunityId');
+            console.log(params, email, fullName);
+
+            try {
+                const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            } catch (error) {
+                console.error('Failed to parse session userData for signing prefill', error);
+            }
+            
+            if (!email) {
+                email = userData.email || '';
+            }
+            if (!fullName) {
+                const firstName = (userData.firstName || '').trim();
+                const lastName = (userData.lastName || '').trim();
+                fullName = [firstName, lastName].filter(Boolean).join(' ');
+            }
+
+
+            if (opportunityId) {
+                sessionStorage.setItem('opportunityId', opportunityId);
+            }
+
+            const hasRequiredParams = Boolean(selectedPackage && customerType);
+            let signingCompleted = false;
+            const errorState = document.getElementById('errorState');
+            const signingCard = document.getElementById('signingCard');
+            const docusealForm = document.getElementById('docusealForm');
+            const continueButton = document.getElementById('continueButton');
+            const headerDescription = document.getElementById('headerDescription');
+
+            if (docusealForm) {
+                // use mm/dd/yyyy format for date
+                const date = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+                docusealForm.setAttribute('data-values', JSON.stringify({
+                    'Name': fullName,
+                    'Date': date
+                }));
+                docusealForm.setAttribute('data-logo', `${window.location.origin}/LOGO.png`);
+                if (fullName) {
+                    docusealForm.setAttribute('data-name', fullName);
+                }
+                if (email) {
+                    console.log('email', email);
+                    docusealForm.setAttribute('data-email', email);
+                }
+            }
+
+            if (!hasRequiredParams && !isStandaloneSigning) {
+                errorState.style.display = 'block';
+                signingCard.style.display = 'none';
+                return;
+            }
+
+            if (isStandaloneSigning) {
+                headerDescription.textContent = 'Complete signing below. Payment details were not provided in this link.';
+                continueButton.style.display = 'none';
+            } else {
+                continueButton.disabled = true;
+                continueButton.textContent = 'Complete signing to continue';
+            }
+
+            function buildCheckoutUrl() {
+                const checkoutUrl = new URL('/checkout.html', window.location.origin);
+                checkoutUrl.searchParams.set('chosenPackage', selectedPackage);
+                checkoutUrl.searchParams.set('customerType', customerType);
+                if (email) checkoutUrl.searchParams.set('email', email);
+                if (opportunityId) checkoutUrl.searchParams.set('opportunityId', opportunityId);
+                return checkoutUrl;
+            }
+
+            async function markReadyForCheckout() {
+                if (!opportunityId) return;
+                try {
+                    await fetch('/api/mark_application_step', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            opportunityId,
+                            step: 'checkout'
+                        })
+                    });
+                } catch (error) {
+                    console.error('Unable to persist signing progress', error);
+                }
+            }
+
+            async function continueToPayment() {
+                await markReadyForCheckout();
+                window.location.href = buildCheckoutUrl().toString();
+            }
+
+            docusealForm.addEventListener('completed', async function (event) {
+                console.log('DocuSeal signing completed', event.detail);
+                signingCompleted = true;
+                continueButton.disabled = false;
+                continueButton.textContent = 'Continue to payment';
+                if (hasRequiredParams) {
+                    await continueToPayment();
+                    return;
+                }
+                alert('Your documents were signed successfully.');
+            });
+
+            continueButton.addEventListener('click', function () {
+                if (!signingCompleted) {
+                    alert('Please complete signing before continuing to payment.');
+                    return;
+                }
+                continueToPayment();
+            });
+        })();
+    </script>
+</body>
+</html>

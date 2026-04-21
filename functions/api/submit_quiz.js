@@ -3,7 +3,24 @@
  * This function is automatically available at /api/submit_quiz
  */
 
-import { findPersonByEmail, createPerson, updatePersonPhone, createCopperOpportunity, upsertCheckoutDetails } from '../copper.api.ts';
+import {
+  findPersonByEmail,
+  createPerson,
+  updatePersonPhone,
+  createCopperOpportunity,
+  upsertCheckoutDetails,
+  findLatestOpportunityForPerson
+} from '../copper.api.ts';
+
+const PAYMENT_LINK_FIELD_ID = 727706;
+
+function getCustomFieldValue(customFields, fieldId) {
+  if (!Array.isArray(customFields)) return '';
+  const field = customFields.find(
+    (item) => String(item.custom_field_definition_id) === String(fieldId)
+  );
+  return field?.value || '';
+}
 
 /**
  * Handle all requests (GET, POST, OPTIONS, etc.)
@@ -44,12 +61,43 @@ export async function onRequest(context) {
         await updatePersonPhone(person, formData.phone, env);
       }
     } else {
-      personId = await createPerson(formData, env);
+      try {
+        personId = await createPerson(formData, env);
+      } catch (error) {
+        const existingPerson = await findPersonByEmail(formData.email, env);
+        if (!existingPerson?.id) throw error;
+        personId = existingPerson.id;
+      }
     }
 
-    // 2. Create opportunity in Copper CRM (Estate Planning pipeline)
-    const opportunity = await createCopperOpportunity(formData, personId, env);
     const baseUrl = new URL(request.url).origin;
+
+    // 2. If an application already exists, keep using that fixed link.
+    const existingOpportunity = await findLatestOpportunityForPerson(personId, env);
+    if (existingOpportunity?.id) {
+      const checkoutLinkFromField = getCustomFieldValue(
+        existingOpportunity.custom_fields,
+        PAYMENT_LINK_FIELD_ID
+      );
+      const checkoutLink = checkoutLinkFromField || `${baseUrl}/c/${existingOpportunity.id}`;
+
+      if (!checkoutLinkFromField) {
+        await upsertCheckoutDetails(existingOpportunity.id, env, {
+          checkoutLink
+        });
+      }
+
+      return corsResponse({
+        success: true,
+        opportunityId: existingOpportunity.id,
+        checkoutLink,
+        reusedExistingOpportunity: true,
+        message: 'Existing application found'
+      });
+    }
+
+    // 3. Create opportunity in Copper CRM (Estate Planning pipeline)
+    const opportunity = await createCopperOpportunity(formData, personId, env);
     const checkoutLink = `${baseUrl}/c/${opportunity.id}`;
     await upsertCheckoutDetails(opportunity.id, env, {
       checkoutLink,

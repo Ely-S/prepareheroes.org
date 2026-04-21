@@ -1,7 +1,7 @@
 // Configuration
 // Use relative URLs so this works in local dev + on any domain.
 const WORKER_URL = '/api/submit_quiz'; // Cloudflare Pages Function route
-const REDIRECT_URL = '/checkout.html';
+const REDIRECT_URL = '/sign.html';
 
 const basePrices = {
     will: "$400",
@@ -581,8 +581,8 @@ async function selectPackage(packageType) {
             sessionStorage.setItem('opportunityId', String(result.opportunityId));
         }
 
-        // Redirect to the server-provided checkout link when available.
-        // Fallback to the local checkout page if the API didn't return one.
+        // Redirect to the server-provided link when available.
+        // Fallback to the local signing page if the API didn't return one.
         const redirectTarget = result?.checkoutLink || REDIRECT_URL;
         const redirectUrl = new URL(redirectTarget, window.location.origin);
         redirectUrl.searchParams.set('chosenPackage', packageType);

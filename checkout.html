@@ -362,6 +362,7 @@
         $(document).ready(function() {
             const params = new URLSearchParams(window.location.search);
             const selectedPackage = params.get('chosenPackage');
+            const status = params.get('status');
             // Default to 'responder' if not specified to be safe, or 'civilian' if you prefer strictness.
             // Based on the site's focus, defaulting to responder or checking session storage is wise.
             let customerType = params.get('customerType');
@@ -387,6 +388,15 @@
             }
 
             console.log(`Package: ${selectedPackage}, Type: ${customerType}, Email: ${userEmail}`);
+
+            if (status === 'complete') {
+                $('#paymentContent h1').text('Payment Complete');
+                $('#paymentContent .subtitle').text('A member of our team will contact you shortly.')
+                    .append('<p style="margin-top: 2rem;">If you have any questions, you can reach us at <br><a href="tel:+14154297131">+1 (415) 429-7131</a> or <a href="mailto:planning@edgewaterins.com">planning@edgewaterins.com</a>.</p>');
+                $('#freeWillMessage').addClass('hidden');
+                $('#purchaseCard').addClass('hidden');
+                return;
+            }
 
             if (selectedPackage && customerType) {
                 const buttonId = STRIPE_BUTTON_CONFIG[customerType]?.[selectedPackage];

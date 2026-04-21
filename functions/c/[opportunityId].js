@@ -1,4 +1,4 @@
-import { FIELD_IDS, getCopperHeaders } from '../copper.api.ts';
+import { FIELD_IDS, getCopperHeaders, resolveOpportunityStepFromCopper } from '../copper.api.ts';
 
 const COPPER_API_URL = 'https://api.copper.com/developer_api/v1';
 
@@ -36,13 +36,25 @@ async function fetchPersonEmail(personId, env) {
   return emails[0]?.email || '';
 }
 
-function buildCheckoutUrl(requestUrl, { selectedPackage, customerType, email, opportunityId }) {
+function buildSigningUrl(requestUrl, { selectedPackage, customerType, email, opportunityId }) {
+  const target = new URL('/sign.html', requestUrl);
+
+  if (selectedPackage) target.searchParams.set('chosenPackage', selectedPackage);
+  if (customerType) target.searchParams.set('customerType', customerType);
+  if (email) target.searchParams.set('email', email);
+  if (opportunityId) target.searchParams.set('opportunityId', opportunityId);
+
+  return target;
+}
+
+function buildCheckoutUrl(requestUrl, { selectedPackage, customerType, email, opportunityId, paymentComplete = false }) {
   const target = new URL('/checkout.html', requestUrl);
 
   if (selectedPackage) target.searchParams.set('chosenPackage', selectedPackage);
   if (customerType) target.searchParams.set('customerType', customerType);
   if (email) target.searchParams.set('email', email);
   if (opportunityId) target.searchParams.set('opportunityId', opportunityId);
+  if (paymentComplete) target.searchParams.set('status', 'complete');
 
   return target;
 }
@@ -70,17 +82,33 @@ export async function onRequest(context) {
     const customerType = responderStatus === 'civilian' ? 'civilian' : 'responder';
     const email = await fetchPersonEmail(opportunity.primary_contact_id, env);
 
-    const redirectUrl = buildCheckoutUrl(request.url, {
-      selectedPackage,
-      customerType,
-      email,
-      opportunityId
-    });
+    const step = await resolveOpportunityStepFromCopper(opportunity, env);
+    const redirectUrl = step === 'payment-complete'
+      ? buildCheckoutUrl(request.url, {
+          selectedPackage,
+          customerType,
+          email,
+          opportunityId,
+          paymentComplete: true
+        })
+      : step === 'checkout'
+        ? buildCheckoutUrl(request.url, {
+            selectedPackage,
+            customerType,
+            email,
+            opportunityId
+          })
+        : buildSigningUrl(request.url, {
+            selectedPackage,
+            customerType,
+            email,
+            opportunityId
+          });
 
     return Response.redirect(redirectUrl.toString(), 302);
   } catch (error) {
-    console.error('[Checkout Redirect] Failed to resolve checkout link', error);
-    const fallbackUrl = buildCheckoutUrl(request.url, {
+    console.error('[Signing Redirect] Failed to resolve signing link', error);
+    const fallbackUrl = buildSigningUrl(request.url, {
       selectedPackage: 'will',
       customerType: 'responder',
       opportunityId

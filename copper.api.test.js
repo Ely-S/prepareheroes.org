@@ -178,6 +178,10 @@ describe('Copper API Client', () => {
     it('should update opportunity stage', async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
+        json: async () => ({ details: 'Checkout State: Pending' })
+      });
+      fetch.mockResolvedValueOnce({
+        ok: true,
         json: async () => ({ success: true })
       });
 
@@ -193,6 +197,10 @@ describe('Copper API Client', () => {
     });
 
     it('should throw error on failure', async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ details: 'Checkout State: Pending' })
+      });
       fetch.mockResolvedValueOnce({
         ok: false,
         text: async () => 'Update failed',

@@ -7,6 +7,11 @@ const COPPER_API_URL = 'https://api.copper.com/developer_api/v1';
 const ESTATE_PLANNING_PIPELINE_ID = 1130648;
 const PAID_STAGE_ID = 5076181;
 const COMPLETED_QUIZ_STAGE_ID = 5076179;
+const SIGNED_ENGAGEMENT_LETTER_STAGE_NAME = 'Signed Engagement Letter';
+const PAID_STAGE_NAME = 'Paid';
+const READY_FOR_CHECKOUT_STATE = 'Ready';
+const stageIdCache: Record<string, number | undefined> = {};
+const pipelineCache: Record<string, any> = {};
 export const FIELD_IDS = {
   phone: 722611,
   responderStatus: 722612,
@@ -51,6 +56,13 @@ export function getCopperHeaders(env) {
     'X-PW-Application': 'developer_api',
     'X-PW-UserEmail': env.COPPER_USER_EMAIL
   };
+}
+
+function parseDetailsLine(details: string | undefined, label: string): string | undefined {
+  if (!details) return undefined;
+  const regex = new RegExp(`^${escapeRegExp(label)}:\\s*(.+)$`, 'mi');
+  const match = details.match(regex);
+  return match?.[1]?.trim();
 }
 
 /**
@@ -127,6 +139,63 @@ export async function createPerson(formData, env) {
 }
 
 /**
+ * Fetch opportunity by id
+ */
+export async function fetchOpportunityById(opportunityId, env) {
+  const response = await fetch(`${COPPER_API_URL}/opportunities/${opportunityId}`, {
+    method: 'GET',
+    headers: getCopperHeaders(env)
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to fetch opportunity ${opportunityId}: ${errorText}`);
+  }
+
+  return await response.json();
+}
+
+/**
+ * Resolve a pipeline stage id by stage name from Copper.
+ */
+export async function fetchStageIdByName(pipelineId: number, stageName: string, env): Promise<number> {
+  const cacheKey = `${pipelineId}:${stageName.toLowerCase()}`;
+  if (stageIdCache[cacheKey]) return stageIdCache[cacheKey] as number;
+
+  const pipeline = await fetchPipelineById(pipelineId, env);
+  const stages = Array.isArray(pipeline?.stages) ? pipeline.stages : [];
+  const matchedStage = stages.find(
+    (stage) => String(stage?.name || '').toLowerCase() === stageName.toLowerCase()
+  );
+
+  if (!matchedStage?.id) {
+    throw new Error(`Stage "${stageName}" not found in pipeline ${pipelineId}`);
+  }
+
+  stageIdCache[cacheKey] = matchedStage.id;
+  return matchedStage.id;
+}
+
+async function fetchPipelineById(pipelineId: number, env) {
+  const cacheKey = String(pipelineId);
+  if (pipelineCache[cacheKey]) return pipelineCache[cacheKey];
+
+  const response = await fetch(`${COPPER_API_URL}/pipelines/${pipelineId}`, {
+    method: 'GET',
+    headers: getCopperHeaders(env)
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to fetch pipeline ${pipelineId}: ${errorText}`);
+  }
+
+  const pipeline = await response.json();
+  pipelineCache[cacheKey] = pipeline;
+  return pipeline;
+}
+
+/**
  * Update person's phone number if not present
  */
 export async function updatePersonPhone(person, phone, env) {
@@ -173,6 +242,88 @@ export async function findOpenOpportunityForPerson(personId, env) {
   }
   
   return data[0].id;
+}
+
+/**
+ * Find the latest opportunity in the Estate Planning pipeline for a person
+ */
+export async function findLatestOpportunityForPerson(personId, env) {
+  const url = `${COPPER_API_URL}/opportunities/search`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: getCopperHeaders(env),
+    body: JSON.stringify({
+      primary_contact_ids: [personId],
+      pipeline_ids: [ESTATE_PLANNING_PIPELINE_ID],
+      page_size: 20,
+      sort_by: 'date_modified',
+      sort_direction: 'desc'
+    })
+  });
+
+  if (!response.ok) {
+    console.error('[Copper API] Failed searching latest opportunity:', await response.text());
+    return null;
+  }
+
+  const opportunities = await response.json();
+  if (!Array.isArray(opportunities) || opportunities.length === 0) return null;
+
+  const sorted = opportunities.slice().sort((a, b) => {
+    const aTime = new Date(a.date_modified || a.date_created || 0).getTime();
+    const bTime = new Date(b.date_modified || b.date_created || 0).getTime();
+    return bTime - aTime;
+  });
+
+  return sorted[0];
+}
+
+/**
+ * Resolve where /c/:id should send the user next
+ */
+export function resolveOpportunityStep(opportunity): 'sign' | 'checkout' | 'payment-complete' {
+  const checkoutState = parseDetailsLine(opportunity?.details, 'Checkout State');
+  const normalizedState = String(checkoutState || '').toLowerCase();
+
+  if (opportunity?.pipeline_stage_id === PAID_STAGE_ID || normalizedState === 'paid') {
+    return 'payment-complete';
+  }
+
+  if (normalizedState === READY_FOR_CHECKOUT_STATE.toLowerCase()) {
+    return 'checkout';
+  }
+
+  return 'sign';
+}
+
+/**
+ * Resolve where /c/:id should send the user, including "at/after paid stage" handling.
+ */
+export async function resolveOpportunityStepFromCopper(opportunity, env): Promise<'sign' | 'checkout' | 'payment-complete'> {
+  const baseStep = resolveOpportunityStep(opportunity);
+  if (baseStep === 'payment-complete') return baseStep;
+
+  try {
+    const pipelineId = Number(opportunity?.pipeline_id || ESTATE_PLANNING_PIPELINE_ID);
+    const currentStageId = Number(opportunity?.pipeline_stage_id);
+    if (!currentStageId || !pipelineId) return baseStep;
+
+    const pipeline = await fetchPipelineById(pipelineId, env);
+    const stages = Array.isArray(pipeline?.stages) ? pipeline.stages : [];
+    const paidStage = stages.find(
+      (stage) => String(stage?.name || '').toLowerCase() === PAID_STAGE_NAME.toLowerCase()
+    );
+    const paidStageIndex = stages.findIndex((stage) => Number(stage?.id) === Number(paidStage?.id));
+    const currentStageIndex = stages.findIndex((stage) => Number(stage?.id) === currentStageId);
+
+    if (paidStageIndex >= 0 && currentStageIndex >= paidStageIndex) {
+      return 'payment-complete';
+    }
+  } catch (error) {
+    console.warn('[Copper API] Failed to resolve stage-order completion fallback:', error);
+  }
+
+  return baseStep;
 }
 
 /**
@@ -254,6 +405,37 @@ export async function upsertCheckoutDetails(opportunityId, env, { checkoutLink, 
       console.error(`[Copper API] Failed to update payment link ${opportunityId}: ${txt}`);
       throw new Error(`Copper update failed: ${paymentLinkResponse.status}`);
     }
+  }
+
+  return await response.json();
+}
+
+/**
+ * Mark an application as ready for checkout after signing
+ */
+export async function markOpportunityReadyForCheckout(opportunityId, env) {
+  const signedEngagementStageId = await fetchStageIdByName(
+    ESTATE_PLANNING_PIPELINE_ID,
+    SIGNED_ENGAGEMENT_LETTER_STAGE_NAME,
+    env
+  );
+
+  await upsertCheckoutDetails(opportunityId, env, {
+    checkoutState: READY_FOR_CHECKOUT_STATE
+  });
+
+  const response = await fetch(`${COPPER_API_URL}/opportunities/${opportunityId}`, {
+    method: 'PUT',
+    headers: getCopperHeaders(env),
+    body: JSON.stringify({
+      pipeline_stage_id: signedEngagementStageId
+    })
+  });
+
+  if (!response.ok) {
+    const txt = await response.text();
+    console.error(`[Copper API] Failed to update opportunity stage ${opportunityId}: ${txt}`);
+    throw new Error(`Copper stage update failed: ${response.status}`);
   }
 
   return await response.json();

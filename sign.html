@@ -95,7 +95,6 @@
             }
         }
     </style>
-    <script src="https://cdn.docuseal.com/js/form.js"></script>
 </head>
 <body>
     <section class="thank-you-section">
@@ -116,9 +115,12 @@
                     </div>
 
                     <div class="purchase-card" id="signingCard">
+                        <script src="https://cdn.docuseal.com/js/form.js"></script>
+
                         <docuseal-form
                             id="docusealForm"
-                            data-src="https://docuseal.com/d/7Zc5C5NhzYNUCQ">
+                            data-with-title="false"
+                            data-src="https://docuseal.com/d/7Zc5C5NhzYNUCQ">                            
                         </docuseal-form>
                         <div class="actions">
                             <button class="btn btn-secondary" id="continueButton" type="button">Continue to payment</button>
@@ -148,27 +150,54 @@
             const customerType = params.get('customerType');
             const opportunityId = params.get('opportunityId') || sessionStorage.getItem('opportunityId') || '';
             let email = params.get('email') || '';
+            let fullName = params.get('name') || '';
             const isStandaloneSigning = !selectedPackage && !customerType && !params.get('opportunityId');
+            console.log(params, email, fullName);
 
-            if (!email) {
-                try {
-                    const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-                    email = userData.email || '';
-                } catch (error) {
-                    console.error('Failed to parse session userData for signing email', error);
-                }
+            try {
+                const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+            } catch (error) {
+                console.error('Failed to parse session userData for signing prefill', error);
             }
+            
+            if (!email) {
+                email = userData.email || '';
+            }
+            if (!fullName) {
+                const firstName = (userData.firstName || '').trim();
+                const lastName = (userData.lastName || '').trim();
+                fullName = [firstName, lastName].filter(Boolean).join(' ');
+            }
+
 
             if (opportunityId) {
                 sessionStorage.setItem('opportunityId', opportunityId);
             }
 
             const hasRequiredParams = Boolean(selectedPackage && customerType);
+            let signingCompleted = false;
             const errorState = document.getElementById('errorState');
             const signingCard = document.getElementById('signingCard');
             const docusealForm = document.getElementById('docusealForm');
             const continueButton = document.getElementById('continueButton');
             const headerDescription = document.getElementById('headerDescription');
+
+            if (docusealForm) {
+                // use mm/dd/yyyy format for date
+                const date = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+                docusealForm.setAttribute('data-values', JSON.stringify({
+                    'Name': fullName,
+                    'Date': date
+                }));
+                docusealForm.setAttribute('data-logo', `${window.location.origin}/LOGO.png`);
+                if (fullName) {
+                    docusealForm.setAttribute('data-name', fullName);
+                }
+                if (email) {
+                    console.log('email', email);
+                    docusealForm.setAttribute('data-email', email);
+                }
+            }
 
             if (!hasRequiredParams && !isStandaloneSigning) {
                 errorState.style.display = 'block';
@@ -179,6 +208,9 @@
             if (isStandaloneSigning) {
                 headerDescription.textContent = 'Complete signing below. Payment details were not provided in this link.';
                 continueButton.style.display = 'none';
+            } else {
+                continueButton.disabled = true;
+                continueButton.textContent = 'Complete signing to continue';
             }
 
             function buildCheckoutUrl() {
@@ -213,6 +245,9 @@
 
             docusealForm.addEventListener('completed', async function (event) {
                 console.log('DocuSeal signing completed', event.detail);
+                signingCompleted = true;
+                continueButton.disabled = false;
+                continueButton.textContent = 'Continue to payment';
                 if (hasRequiredParams) {
                     await continueToPayment();
                     return;
@@ -221,6 +256,10 @@
             });
 
             continueButton.addEventListener('click', function () {
+                if (!signingCompleted) {
+                    alert('Please complete signing before continuing to payment.');
+                    return;
+                }
                 continueToPayment();
             });
         })();
